@@ -1,0 +1,30 @@
+name: MiStoreDevEnvironment
+services:
+    mysql:
+      container_name: mysql
+      image: mysql:latest
+      ports:
+        - "3306:3306"
+#      volumes:
+#        - ./mysql:/var/lib/mysql
+      env_file:
+        - ./environment/mysql.env
+      healthcheck:
+        test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+        interval: 5s
+        timeout: 10s
+        retries: 10
+      networks:
+        - store-project
+    redis:
+      container_name: redis
+      image: redis:latest
+      ports:
+        - "6379:6379"
+      volumes:
+        - ./redis:/data
+      networks:
+        - store-project
+
+networks:
+  store-project:
