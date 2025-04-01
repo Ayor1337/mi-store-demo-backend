@@ -5,4 +5,6 @@ import com.example.entity.dto.Admin;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AdminService extends IService<Admin>, UserDetailsService {
+
+    Admin getOneByUsername(String username);
 }

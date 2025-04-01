@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: Xiaomi-store-project
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_store
+    username: root
+    password: root
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    jwt:
+      secret-key: qwert123456
+      expire: 7
+server:
+  port: 8081

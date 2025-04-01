@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @TableName("Users")
-public class User implements Serializable {
+public class Account implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer userId;       // 用户ID
     private String username;      // 用户名

@@ -1,5 +1,7 @@
 package com.example.entity.dto;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import java.util.Date;
 @Data
 @TableName("Cart")
 public class Cart implements Serializable {
+    @TableId(type = IdType.AUTO)
     private Integer cartId;       // 购物车ID
     private Integer userId;       // 用户ID
     private Date createTime;      // 购物车创建时间

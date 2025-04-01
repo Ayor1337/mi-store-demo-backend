@@ -1,16 +1,19 @@
 package com.example;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
-import com.example.service.UserService;
+import com.example.service.AccountService;
+import com.example.util.JWTUtil;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,15 +22,19 @@ import java.util.List;
 public class ExampleTest {
 
     @Resource
-    private UserService userService;
+    private AccountService accountService;
+
+
 
     @Value("${spring.datasource.url}")
     private String url;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
 
     @Test
     public void test() {
-
+        System.out.println(passwordEncoder.encode("admin"));
     }
 
     @Test

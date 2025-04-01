@@ -1,5 +1,9 @@
 package com.example.result;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.Data;
 
 @Data
@@ -49,5 +53,9 @@ public class Result<T> {
         result.setCode(code);
         result.setMessage(message);
         return result;
+    }
+
+    public String toJSONString() {
+        return JSONObject.toJSONString(this, JSONWriter.Feature.WriteNulls);
     }
 }
