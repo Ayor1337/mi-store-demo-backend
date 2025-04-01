@@ -2,12 +2,12 @@ name: MiStoreDevEnvironment
 services:
     mysql:
       container_name: mysql
-      image: mysql:latest
+      build:
+        context: ./image/mysql
+        dockerfile: Dockerfile
+#      image: mysql:latest
       ports:
         - "3306:3306"
-      build:
-        context: .
-        dockerfile: ./image/mysql/Dockerfile
       volumes:
         - /mi_store/mysql:/var/lib/mysql
       env_file:
