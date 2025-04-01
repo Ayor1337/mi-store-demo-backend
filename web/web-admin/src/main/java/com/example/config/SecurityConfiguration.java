@@ -3,20 +3,24 @@ package com.example.config;
 import com.example.service.AdminService;
 import com.example.filter.JWTAuthorizeFilter;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
+//@Configuration
 public class SecurityConfiguration {
 
-    @Resource
+//    @Resource
     JWTAuthorizeFilter jwtFilter;
 
-    @Resource
+//    @Resource
     AdminService adminService;
 
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,7 +40,11 @@ public class SecurityConfiguration {
                     conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .build();
+    }
+
+    public void onAuthenticationSuccess(HttpServletRequest req,
+                                        HttpServletResponse resp,
+                                        AuthenticationException e) throws Exception {
     }
 }
