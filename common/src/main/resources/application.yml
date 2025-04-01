@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: Xiaomi-store-project
+  security:
+    jwt:
+      secret-key: qwert123456
+      expire: 7
