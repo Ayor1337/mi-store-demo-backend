@@ -34,4 +34,4 @@ build/
 
 
 ### Docker  ###
-/.docker/
+.docker/
