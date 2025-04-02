@@ -35,6 +35,12 @@ public enum ResultCodeEnum {
     APP_ACCOUNT_DISABLED_ERROR(507, "该用户已被禁用"),
 
 
+    UNAUTHENTICATED_ERROR(401, "未认证"),
+
+    LOGOUT_SUCCESS(200, "退出成功"),
+    LOGOUT_FAILURE(400, "退出失败"),
+
+
     TOKEN_EXPIRED(601, "token过期"),
     TOKEN_INVALID(602, "token非法");
 
