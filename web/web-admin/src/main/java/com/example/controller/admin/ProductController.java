@@ -24,6 +24,8 @@ public class ProductController {
 
         List<Product> list=productService.savelist();
 
+        System.out.println("Hello world");
+
         return Result.ok(list);
     }
 }
