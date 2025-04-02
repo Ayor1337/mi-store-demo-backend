@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@TableName("Category")
+@TableName("Categories")
 public class Category implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer categoryId;   // 分类ID

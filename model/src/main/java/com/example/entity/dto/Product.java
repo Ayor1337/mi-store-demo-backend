@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@TableName("Product")
+@TableName("Products")
 public class Product implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer productId;    // 商品ID

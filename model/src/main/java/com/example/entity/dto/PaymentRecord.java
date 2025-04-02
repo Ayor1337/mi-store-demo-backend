@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@TableName("PaymentRecord")
+@TableName("PaymentRecords")
 public class PaymentRecord implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer paymentId;       // 支付记录ID

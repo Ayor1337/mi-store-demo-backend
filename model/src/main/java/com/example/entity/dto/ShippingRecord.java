@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@TableName("ShippingRecord")
+@TableName("ShippingRecords")
 public class ShippingRecord implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer shippingId;      // 配送记录ID

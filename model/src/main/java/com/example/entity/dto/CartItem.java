@@ -9,7 +9,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@TableName("CartItem")
+@TableName("CartItems")
 public class CartItem implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer cartItemId;   // 购物车详情ID
