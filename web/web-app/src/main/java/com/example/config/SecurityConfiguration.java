@@ -1,7 +1,6 @@
 package com.example.config;
 
 import com.example.entity.dto.Account;
-import com.example.entity.dto.Admin;
 import com.example.entity.vo.response.AuthorizeVO;
 import com.example.result.Result;
 import com.example.filter.JWTAuthorizeFilter;

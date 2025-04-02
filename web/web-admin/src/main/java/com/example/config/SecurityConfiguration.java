@@ -1,16 +1,13 @@
 package com.example.config;
 
-import com.example.entity.dto.Account;
 import com.example.entity.dto.Admin;
 import com.example.entity.vo.response.AuthorizeVO;
 import com.example.result.Result;
-import com.example.result.ResultCodeEnum;
 import com.example.service.AdminService;
 import com.example.filter.JWTAuthorizeFilter;
 import com.example.util.JWTUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanUtils;
