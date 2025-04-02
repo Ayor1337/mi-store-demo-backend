@@ -3,13 +3,17 @@ package com.example.entity.dto;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @TableName("ShippingRecords")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShippingRecord implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer shippingId;      // 配送记录ID
