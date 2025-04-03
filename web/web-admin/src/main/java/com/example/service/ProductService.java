@@ -6,4 +6,6 @@ import com.example.entity.vo.request.ReqProductVO;
 
 public interface ProductService extends IService<Product> {
     void saveProduct(ReqProductVO vo);
+
+    void deleteByIds(Integer id);
 }

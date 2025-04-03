@@ -7,6 +7,8 @@ import com.example.result.Result;
 import com.example.service.CategoryService;
 import com.example.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +43,14 @@ public class ProductController {
     public Result<String> saveProduct(@RequestBody ReqProductVO vo) {
         productService.saveProduct(vo);
         return Result.ok("保存成功");
+    }
+
+
+    @DeleteMapping("/delete/{id}")
+    public Result<String> deleteProduct(@PathVariable Integer id) {
+        log.info("删除商品id：{}",id);
+        productService.deleteByIds(id);
+
+        return Result.ok("删除成功");
     }
 }
