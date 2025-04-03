@@ -50,7 +50,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public Result<String> deleteProduct(@PathVariable Integer id) {
         log.info("删除商品id：{}",id);
-        productService.deleteByIds(id);
+        productService.deleteById(id);
 
         return Result.ok("删除成功");
     }

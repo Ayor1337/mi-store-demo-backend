@@ -8,7 +8,7 @@ import com.example.entity.vo.response.RespProductVO;
 public interface ProductService extends IService<Product> {
     void saveProduct(ReqProductVO vo);
 
-    void deleteByIds(Integer id);
+    void deleteById(Integer id);
 
     RespProductVO getProductById(Integer id);
 }

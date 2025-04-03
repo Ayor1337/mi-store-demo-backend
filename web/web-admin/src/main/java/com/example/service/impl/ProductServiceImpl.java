@@ -29,7 +29,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
-    public void deleteByIds(Integer id) {
+    public void deleteById(Integer id) {
         this.removeById(id);
     }
 
