@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.entity.dto.Category;
 import com.example.entity.dto.Product;
 import com.example.entity.vo.request.ReqProductVO;
+import com.example.entity.vo.response.RespProductVO;
 import com.example.result.Result;
 import com.example.service.CategoryService;
 import com.example.service.ProductService;
@@ -52,5 +53,12 @@ public class ProductController {
         productService.deleteByIds(id);
 
         return Result.ok("删除成功");
+    }
+
+    @GetMapping("/getproduct/{id}")
+    public Result<RespProductVO> getProduct(@PathVariable Integer id) {
+        log.info("查询商品回写id：{}",id);
+        RespProductVO product=productService.getProductById(id);
+        return Result.ok(product);
     }
 }
