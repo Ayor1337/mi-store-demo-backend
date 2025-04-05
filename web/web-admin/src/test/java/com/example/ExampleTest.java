@@ -1,12 +1,11 @@
 package com.example;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
-import com.example.service.AccountService;
-import com.example.util.JWTUtil;
+import com.example.entity.pojo.Product;
+import com.example.service.ProductService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.util.List;
 public class ExampleTest {
 
     @Resource
-    private AccountService accountService;
+    private ProductService productService;
 
 
 
@@ -34,7 +33,8 @@ public class ExampleTest {
 
     @Test
     public void test() {
-        System.out.println(passwordEncoder.encode("admin"));
+        productService.lambdaQuery()
+                .eq(Product::getProductId, Arrays.asList(11,12,13));
     }
 
     @Test

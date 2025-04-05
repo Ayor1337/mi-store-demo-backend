@@ -1,24 +1,27 @@
 package com.example.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.Product;
-import com.example.entity.vo.request.ReqProductVO;
-import com.example.entity.vo.response.RespProductVO;
+import com.example.entity.pojo.Product;
+import com.example.entity.dto.ProductDTO;
+import com.example.entity.vo.ProductVO;
 import com.example.mapper.ProductMapper;
 import com.example.service.ProductService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
 
 
     @Override
-    public void saveProduct(ReqProductVO vo) {
+    @Transactional
+    public String saveProduct(ProductDTO vo) {
+        if (vo == null) {
+            return "发送数据为空";
+        }
+
         Product product = new Product();
         product.setName(vo.getName());
         product.setDescription(vo.getDescription());
@@ -26,21 +29,50 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setStock(vo.getStock());
         product.setCategoryId(vo.getCategoryId());
         this.save(product);
+
+        return null;
     }
 
     @Override
-    public void deleteById(Integer id) {
+    @Transactional
+    public String deleteById(Integer id) {
+        if (!existProductById(id)) {
+            return "商品不存在";
+        }
         this.removeById(id);
+        return null;
+    }
+
+    private boolean existProductById(Integer id) {
+        return this.exists(Wrappers.<Product>lambdaQuery().eq(Product::getProductId, id));
     }
 
     @Override
-    public RespProductVO getProductById(Integer id) {
-        LambdaQueryWrapper<Product> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Product::getProductId,id);
-        Product list = this.getOne(queryWrapper);
-        System.out.println(list);
-        RespProductVO respProductVO = new RespProductVO();
-        BeanUtils.copyProperties(list,respProductVO);
-        return respProductVO;
+    public ProductVO getProductById(Integer id) {
+        Product product = this.lambdaQuery().eq(Product::getProductId, id).one();
+        if (product == null) {
+            return null;
+        }
+        ProductVO productVO = new ProductVO();
+        BeanUtils.copyProperties(product, productVO);
+        return productVO;
+    }
+
+    @Override
+    @Transactional
+    public String updateProduct(ProductDTO dto) {
+        if (dto == null) {
+            return "修改的对象为空";
+        }
+        Product product = new Product();
+        product.setProductId(dto.getProductId());
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setStock(dto.getStock());
+        product.setCategoryId(dto.getCategoryId());
+        this.updateById(product);
+
+        return null;
     }
 }

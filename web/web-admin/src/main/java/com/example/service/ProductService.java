@@ -1,14 +1,16 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.dto.Product;
-import com.example.entity.vo.request.ReqProductVO;
-import com.example.entity.vo.response.RespProductVO;
+import com.example.entity.pojo.Product;
+import com.example.entity.dto.ProductDTO;
+import com.example.entity.vo.ProductVO;
 
 public interface ProductService extends IService<Product> {
-    void saveProduct(ReqProductVO vo);
+    String saveProduct(ProductDTO vo);
 
-    void deleteById(Integer id);
+    String deleteById(Integer id);
 
-    RespProductVO getProductById(Integer id);
+    ProductVO getProductById(Integer id);
+
+    String updateProduct(ProductDTO vo);
 }

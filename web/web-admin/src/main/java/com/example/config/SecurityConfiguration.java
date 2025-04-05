@@ -1,7 +1,7 @@
 package com.example.config;
 
-import com.example.entity.dto.Admin;
-import com.example.entity.vo.response.AuthorizeVO;
+import com.example.entity.pojo.Admin;
+import com.example.entity.vo.AuthorizeVO;
 import com.example.result.Result;
 import com.example.result.ResultCodeEnum;
 import com.example.service.AdminService;

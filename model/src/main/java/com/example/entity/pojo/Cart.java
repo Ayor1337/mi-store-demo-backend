@@ -1,4 +1,4 @@
-package com.example.entity.dto;
+package com.example.entity.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,13 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.util.Date;
+
 @Data
-@TableName("Admins")
+@TableName("Cart")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Admin {
+public class Cart implements Serializable {
     @TableId(type = IdType.AUTO)
-    private Integer adminId;
-    private String username;
-    private String password;
+    private Integer cartId;       // 购物车ID
+    private Integer userId;       // 用户ID
+    private Date createTime;      // 购物车创建时间
 }

@@ -1,15 +1,14 @@
 package com.example.controller;
 
-import com.example.entity.dto.Category;
-import com.example.entity.dto.Product;
-import com.example.entity.vo.request.ReqProductVO;
-import com.example.entity.vo.response.RespProductVO;
+import com.example.entity.pojo.Category;
+import com.example.entity.pojo.Product;
+import com.example.entity.dto.ProductDTO;
+import com.example.entity.vo.ProductVO;
 import com.example.result.Result;
+import com.example.result.ResultCodeEnum;
 import com.example.service.CategoryService;
 import com.example.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
@@ -41,24 +40,30 @@ public class ProductController {
     }
 
     @PostMapping("/save_product")
-    public Result<String> saveProduct(@RequestBody ReqProductVO vo) {
-        productService.saveProduct(vo);
-        return Result.ok("保存成功");
+    public Result<Void> saveProduct(@RequestBody ProductDTO vo) {
+        return Result.messageHandler(() -> productService.saveProduct(vo));
     }
 
 
     @DeleteMapping("/delete/{id}")
-    public Result<String> deleteProduct(@PathVariable Integer id) {
+    public Result<Void> deleteProduct(@PathVariable Integer id) {
         log.info("删除商品id：{}",id);
-        productService.deleteById(id);
-
-        return Result.ok("删除成功");
+        return Result.messageHandler(() -> productService.deleteById(id));
     }
 
-    @GetMapping("/getproduct/{id}")
-    public Result<RespProductVO> getProduct(@PathVariable Integer id) {
+    @GetMapping("/get_product/{id}")
+    public Result<ProductVO> getProduct(@PathVariable Integer id) {
         log.info("查询商品回写id：{}",id);
-        RespProductVO product=productService.getProductById(id);
+        ProductVO product = productService.getProductById(id);
+        if (product == null)
+            return Result.fail(400, "商品不存在");
         return Result.ok(product);
     }
+
+    @PostMapping("/update")
+    public Result<Void> updateProduct(@RequestBody ProductDTO vo) {
+        return Result.messageHandler(() -> productService.updateProduct(vo));
+    }
+
+
 }

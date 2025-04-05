@@ -1,13 +1,12 @@
-package com.example.entity.vo.response;
+package com.example.entity.vo;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 //@Builder
 @Data
-public class RespProductVO {
+public class ProductVO {
 
         private String name;
         private String description;

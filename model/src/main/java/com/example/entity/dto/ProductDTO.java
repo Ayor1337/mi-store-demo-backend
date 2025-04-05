@@ -1,11 +1,12 @@
-package com.example.entity.vo.request;
+package com.example.entity.dto;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class ReqProductVO {
+public class ProductDTO {
+    private Integer productId;
     private String name;
     private String description;
     private BigDecimal price;

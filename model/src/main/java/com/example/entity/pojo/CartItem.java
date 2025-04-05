@@ -1,4 +1,4 @@
-package com.example.entity.dto;
+package com.example.entity.pojo;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;

@@ -1,7 +1,7 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.Account;
+import com.example.entity.pojo.Account;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import org.springframework.security.core.userdetails.User;

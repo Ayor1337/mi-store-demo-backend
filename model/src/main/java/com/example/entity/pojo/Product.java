@@ -1,4 +1,4 @@
-package com.example.entity.dto;
+package com.example.entity.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @TableName("Products")
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor  
 public class Product implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer productId;    // 商品ID

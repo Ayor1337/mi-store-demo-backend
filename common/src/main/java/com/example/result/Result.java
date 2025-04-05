@@ -5,6 +5,9 @@ import com.alibaba.fastjson2.JSONWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
+
+import java.util.function.Supplier;
 
 @Data
 public class Result<T> {
@@ -57,5 +60,11 @@ public class Result<T> {
 
     public String toJSONString() {
         return JSONObject.toJSONString(this, JSONWriter.Feature.WriteNulls);
+    }
+
+    @Bean
+    public static Result<Void> messageHandler(Supplier<String> action) {
+        String message = action.get();
+        return message == null ? Result.ok() : Result.fail(ResultCodeEnum.FAIL.getCode(), message);
     }
 }
