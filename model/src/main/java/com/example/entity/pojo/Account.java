@@ -3,10 +3,12 @@ package com.example.entity.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,11 +17,11 @@ import java.util.Date;
 @TableName("Users")
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true)
 public class Account implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer userId;       // 用户ID
     private String username;      // 用户名
+    @JsonIgnore
     private String password;      // 密码（存储时加密，返回时可不包含）
     private String email;         // 邮箱
     private String phone;         // 电话

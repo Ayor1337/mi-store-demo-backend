@@ -40,8 +40,8 @@ public class ProductController {
     }
 
     @PostMapping("/save_product")
-    public Result<Void> saveProduct(@RequestBody ProductDTO vo) {
-        return Result.messageHandler(() -> productService.saveProduct(vo));
+    public Result<Void> saveProduct(@RequestBody ProductDTO dto) {
+        return Result.messageHandler(() -> productService.saveProduct(dto));
     }
 
 
@@ -61,8 +61,8 @@ public class ProductController {
     }
 
     @PostMapping("/update")
-    public Result<Void> updateProduct(@RequestBody ProductDTO vo) {
-        return Result.messageHandler(() -> productService.updateProduct(vo));
+    public Result<Void> updateProduct(@RequestBody ProductDTO dto) {
+        return Result.messageHandler(() -> productService.updateProduct(dto));
     }
 
 
