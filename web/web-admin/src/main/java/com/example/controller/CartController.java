@@ -22,6 +22,9 @@ public class CartController {
     @GetMapping("/get_items/{id}")
     public Result<List<CartItemVO>> getCartByUserId(@PathVariable Integer id) {
         CartVO cartVOByUserId = cartService.getCartVOByUserId(id);
+        if (cartVOByUserId == null) {
+            return Result.fail();
+        }
         return Result.ok(cartVOByUserId.getCartItems());
 
     }
