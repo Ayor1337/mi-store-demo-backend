@@ -1,17 +1,20 @@
 package com.example.entity.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-//@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductVO {
-
-        private String name;
-        private String description;
-        private BigDecimal price;
-        private Integer stock;
-        private Integer categoryId;
+    private Integer productId;
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private Integer stock;
+    private Integer categoryId;
 
 }

@@ -16,7 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CartItem implements Serializable {
     @TableId(type = IdType.AUTO)
-    private Integer cartItemId;   // 购物车详情ID
+    private Integer cartItemId;   // 购q物车详情ID
     private Integer cartId;       // 购物车ID
     private Integer productId;    // 商品ID
     private Integer quantity;     // 添加数量

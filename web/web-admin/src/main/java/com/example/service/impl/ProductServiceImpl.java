@@ -2,8 +2,8 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.pojo.Product;
 import com.example.entity.dto.ProductDTO;
+import com.example.entity.pojo.Product;
 import com.example.entity.vo.ProductVO;
 import com.example.mapper.ProductMapper;
 import com.example.service.ProductService;
@@ -11,9 +11,21 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
 
+
+    @Override
+    public List<ProductVO> listProduct() {
+        List<Product> list = this.list();
+        return list.stream().map(product -> {
+            ProductVO productVO = new ProductVO();
+            BeanUtils.copyProperties(product, productVO);
+            return productVO;
+        }).toList();
+    }
 
     @Override
     @Transactional
@@ -43,7 +55,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return null;
     }
 
-    private boolean existProductById(Integer id) {
+    public boolean existProductById(Integer id) {
         return this.exists(Wrappers.<Product>lambdaQuery().eq(Product::getProductId, id));
     }
 
@@ -73,6 +85,39 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setCategoryId(dto.getCategoryId());
         this.updateById(product);
 
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public String increaseProductStock(Integer productId, Integer quantity) {
+        Product product = this.getById(productId);
+        if (quantity == null || quantity <= 0) {
+            return "购物数量必须大于0";
+        }
+        if (product == null) {
+            return "商品不存在";
+        }
+        product.setStock(product.getStock() + quantity);
+        this.updateById(product);
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public String decreaseProductStock(Integer productId, Integer quantity) {
+        Product product = this.getById(productId);
+        if (quantity == null || quantity <= 0) {
+            return "购物数量必须大于0";
+        }
+        if (product == null) {
+            return "商品不存在";
+        }
+        if (product.getStock() < quantity) {
+            return "库存不足";
+        }
+        product.setStock(product.getStock() - quantity);
+        this.updateById(product);
         return null;
     }
 }

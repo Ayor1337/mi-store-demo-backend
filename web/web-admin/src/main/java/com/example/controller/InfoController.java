@@ -13,7 +13,6 @@ public class InfoController {
     @RequestMapping("/get_name")
     public Result<String> getLoginUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getName());
         return Result.ok();
     }
 }

@@ -1,7 +1,5 @@
 package com.example.controller;
 
-import com.example.entity.pojo.Category;
-import com.example.entity.pojo.Product;
 import com.example.entity.dto.ProductDTO;
 import com.example.entity.vo.ProductVO;
 import com.example.result.Result;
@@ -28,16 +26,13 @@ public class ProductController {
 
     @GetMapping("/list")
     @Description("获取所有商品")
-    public Result<List<Product>> getProductsAsList(){
-        List<Product> list=productService.list();
-        return Result.ok(list);
+    public Result<List<ProductVO>> getProductsAsList() {
+        List<ProductVO> productVO = productService.listProduct();
+        if (productVO == null)
+            return Result.build(null, ResultCodeEnum.DATA_NOT_FOUND);
+        return Result.ok(productVO);
     }
 
-    @GetMapping("/category/list")
-    public Result<List<Category>> getCategoryList() {
-        List<Category> list = categoryService.list();
-        return Result.ok(list);
-    }
 
     @PostMapping("/save_product")
     public Result<Void> saveProduct(@RequestBody ProductDTO dto) {
@@ -47,13 +42,13 @@ public class ProductController {
 
     @DeleteMapping("/delete/{id}")
     public Result<Void> deleteProduct(@PathVariable Integer id) {
-        log.info("删除商品id：{}",id);
+        log.info("删除商品id：{}", id);
         return Result.messageHandler(() -> productService.deleteById(id));
     }
 
     @GetMapping("/get_product/{id}")
     public Result<ProductVO> getProduct(@PathVariable Integer id) {
-        log.info("查询商品回写id：{}",id);
+        log.info("查询商品回写id：{}", id);
         ProductVO product = productService.getProductById(id);
         if (product == null)
             return Result.fail(400, "商品不存在");
@@ -63,6 +58,16 @@ public class ProductController {
     @PostMapping("/update")
     public Result<Void> updateProduct(@RequestBody ProductDTO dto) {
         return Result.messageHandler(() -> productService.updateProduct(dto));
+    }
+
+    @PostMapping("/increase_stock")
+    public Result<Void> increaseStock(@RequestParam Integer productId, @RequestParam Integer quantity) {
+        return Result.messageHandler(() -> productService.increaseProductStock(productId, quantity));
+    }
+
+    @PostMapping("/decrease_stock")
+    public Result<Void> decreaseStock(@RequestParam Integer productId, @RequestParam Integer quantity) {
+        return Result.messageHandler(() -> productService.decreaseProductStock(productId, quantity));
     }
 
 

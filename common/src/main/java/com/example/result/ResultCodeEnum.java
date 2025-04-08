@@ -45,7 +45,9 @@ public enum ResultCodeEnum {
     TOKEN_INVALID(602, "token非法"),
 
 
-    VALIDATE_FAILED(400, "参数校验失败");
+    VALIDATE_FAILED(400, "参数校验失败"),
+
+    DATA_NOT_FOUND(402, "数据不存在");
 
 
     private final Integer code;

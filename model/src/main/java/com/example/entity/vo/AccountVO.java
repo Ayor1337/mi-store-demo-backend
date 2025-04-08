@@ -1,6 +1,5 @@
-package com.example.entity.dto;
+package com.example.entity.vo;
 
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountDTO {
+public class AccountVO {
     private Integer userId;
     private String username;
     private String password;
-    @Email
     private String email;
     private String phone;
     private String address;

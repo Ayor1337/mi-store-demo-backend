@@ -1,14 +1,12 @@
 package com.example.controller;
 
 import com.example.entity.dto.AccountDTO;
-import com.example.entity.pojo.Account;
+import com.example.entity.vo.AccountVO;
 import com.example.result.Result;
+import com.example.result.ResultCodeEnum;
 import com.example.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,27 +18,34 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping("/list")
-    public Result<List<Account>> getAccountsAsList() {
-        return Result.ok(accountService.getAccounts());
+    public Result<List<AccountVO>> getAccountsAsList() {
+        if (accountService == null) {
+            return Result.build(null, ResultCodeEnum.DATA_NOT_FOUND);
+        }
+        return Result.ok(accountService.listAccount());
     }
 
-    @GetMapping("/save_user")
-    public Result<Void> saveUser(AccountDTO dto) {
-        return Result.ok();
+    @PostMapping("/save_user")
+    public Result<Void> saveUser(@RequestBody AccountDTO dto) {
+        return Result.messageHandler(() -> accountService.saveAccount(dto));
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public Result<Void> deleteUser(@PathVariable Integer id) {
-        return Result.ok();
+        return Result.messageHandler(() -> accountService.deleteAccountById(id));
     }
 
     @GetMapping("/get_user/{id}")
-    public Result<Account> getUser(@PathVariable Integer id) {
-        return Result.ok();
+    public Result<AccountVO> getUser(@PathVariable Integer id) {
+        AccountVO vo = accountService.getAccountById(id);
+        if (vo == null)
+            return Result.fail(400, "用户不存在");
+        return Result.ok(vo);
+
     }
 
     @GetMapping("/update")
     public Result<Void> updateUser(AccountDTO dto) {
-        return Result.ok();
+        return Result.messageHandler(() -> accountService.updateAccount(dto));
     }
 }
