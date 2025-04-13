@@ -2,10 +2,7 @@ package com.example.result;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
 
 import java.util.function.Supplier;
 
@@ -62,9 +59,14 @@ public class Result<T> {
         return JSONObject.toJSONString(this, JSONWriter.Feature.WriteNulls);
     }
 
-    @Bean
     public static Result<Void> messageHandler(Supplier<String> action) {
         String message = action.get();
         return message == null ? Result.ok() : Result.fail(ResultCodeEnum.FAIL.getCode(), message);
     }
+
+    public static <T> Result<T> dataMessageHandler(Supplier<T> action, String message) {
+        T data = action.get();
+        return data == null ? Result.fail(ResultCodeEnum.FAIL.getCode(), message) : Result.ok(data);
+    }
+
 }

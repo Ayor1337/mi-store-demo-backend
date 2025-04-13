@@ -8,7 +8,9 @@ import com.example.entity.pojo.Account;
 import com.example.entity.vo.AccountVO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
+import com.example.service.CartService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements AccountService {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -24,6 +27,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     public AccountServiceImpl(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
+    @Autowired
+    private CartService cartService;
 
     @Override
     public List<AccountVO> listAccount() {
@@ -51,7 +57,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    @Transactional
     public String saveAccount(AccountDTO dto) {
         if (dto == null || existsAccountById(dto.getUserId())) {
             return "用户已存在或数据为空";
@@ -63,21 +68,22 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         account.setPhone(dto.getPhone());
         account.setAddress(dto.getAddress());
         this.save(account);
-        return null;
+        return cartService.saveCart(account.getUserId());
     }
 
     @Override
-    @Transactional
     public String deleteAccountById(Integer id) {
         if (id == null || !existsAccountById(id)) {
             return "用户不存在或参数为空";
+        }
+        if (cartService.deleteCartByUserId(id) != null) {
+            return "删除购物车失败";
         }
         this.removeById(id);
         return null;
     }
 
     @Override
-    @Transactional
     public String updateAccount(AccountDTO dto) {
         if (dto == null || !existsAccountById(dto.getUserId())) {
             return "";

@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.entity.dto.Base64Upload;
 import com.example.entity.dto.ProductDTO;
 import com.example.entity.pojo.Product;
 import com.example.entity.vo.ProductVO;
@@ -10,6 +11,8 @@ import java.util.List;
 public interface ProductService extends IService<Product> {
     List<ProductVO> listProduct();
 
+    List<ProductVO> getProductByCategoryId(Integer categoryId);
+
     String saveProduct(ProductDTO vo);
 
     String deleteById(Integer id);
@@ -18,7 +21,11 @@ public interface ProductService extends IService<Product> {
 
     String updateProduct(ProductDTO vo);
 
-    String increaseProductStock(Integer productId, Integer quantity);
+    String updateImg(Integer productId, Base64Upload file);
 
-    String decreaseProductStock(Integer productId, Integer quantity);
+    String updateImgUrl(Integer productId, String fileUrl);
+
+    String deleteImg(Integer productId);
+
+    String deleteImgUrl(Integer productId);
 }

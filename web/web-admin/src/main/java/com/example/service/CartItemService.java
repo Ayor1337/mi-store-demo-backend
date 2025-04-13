@@ -14,9 +14,15 @@ public interface CartItemService extends IService<CartItem> {
 
     String deleteCartItemById(Integer cartItemId);
 
+    String deleteAllCartItemByCartId(Integer userId);
+
+    String deleteAllCartItemByProductId(Integer productId);
+
     String updateCartItemById(CartItemDTO dto);
 
     String increaseCartItemQuantity(Integer cartItemId, Integer quantity);
 
     String decreaseCartItemQuantity(Integer cartItemId, Integer quantity);
+
+    String changeCartItemQuantity(Integer cartItemId, Integer quantity);
 }

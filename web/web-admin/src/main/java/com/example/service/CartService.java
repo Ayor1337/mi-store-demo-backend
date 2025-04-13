@@ -6,4 +6,8 @@ import com.example.entity.vo.CartVO;
 
 public interface CartService extends IService<Cart> {
     CartVO getCartVOByUserId(Integer userId);
+
+    String saveCart(Integer userId);
+
+    String deleteCartByUserId(Integer userId);
 }

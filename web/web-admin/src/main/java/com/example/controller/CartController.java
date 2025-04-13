@@ -2,10 +2,13 @@ package com.example.controller;
 
 import com.example.entity.dto.CartItemDTO;
 import com.example.entity.vo.CartItemVO;
-import com.example.entity.vo.CartVO;
 import com.example.result.Result;
 import com.example.service.CartItemService;
 import com.example.service.CartService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
+@Tag(name = "购物车管理", description = "与购物车相关的操作")
 public class CartController {
 
     @Autowired
@@ -22,37 +26,50 @@ public class CartController {
     private CartItemService cartItemService;
 
     @GetMapping("/get_items/{id}")
-    public Result<List<CartItemVO>> getCartByUserId(@PathVariable Integer id) {
-        CartVO cartVOByUserId = cartService.getCartVOByUserId(id);
-        if (cartVOByUserId == null) {
-            return Result.fail();
-        }
-        return Result.ok(cartVOByUserId.getCartItems());
+    @Operation(summary = "获取购物车商品", description = "根据用户ID获取购物车中的商品")
+    public Result<List<CartItemVO>> getCartByUserId(@PathVariable @Parameter(description = "用户ID") Integer id) {
+        return Result.dataMessageHandler(() -> cartService.getCartVOByUserId(id).getCartItems(), "获取购物车失败");
+    }
 
+    @GetMapping("/get_cartId/{id}")
+    @Operation(summary = "获取购物车ID", description = "根据用户ID获取购物车ID")
+    public Result<Integer> getCartIdByUserId(@PathVariable @Parameter(description = "用户ID") Integer id) {
+        return Result.dataMessageHandler(() -> cartService.getCartVOByUserId(id).getCartId(), "获取购物车失败");
     }
 
     @PostMapping("/save_items")
-    public Result<Void> saveCartItem(@RequestBody CartItemDTO dto) {
+    @Operation(summary = "保存购物车商品", description = "添加商品到购物车")
+    public Result<Void> saveCartItem(@RequestBody @Valid @Parameter(description = "购物车商品详情") CartItemDTO dto) {
         return Result.messageHandler(() -> cartItemService.saveCartItem(dto));
     }
 
     @PostMapping("/delete/{cartItemId}")
-    public Result<Void> deleteCartItemById(@PathVariable Integer cartItemId) {
+    @Operation(summary = "删除购物车商品", description = "根据ID删除购物车中的商品")
+    public Result<Void> deleteCartItemById(@PathVariable @Parameter(description = "购物车商品ID") Integer cartItemId) {
         return Result.messageHandler(() -> cartItemService.deleteCartItemById(cartItemId));
     }
 
     @PostMapping("/update")
-    public Result<Void> updateCartItemById(@RequestBody CartItemDTO dto) {
+    @Operation(summary = "更新购物车商品", description = "更新购物车中的商品信息")
+    public Result<Void> updateCartItemById(@RequestBody @Valid @Parameter(description = "更新后的购物车商品详情") CartItemDTO dto) {
         return Result.messageHandler(() -> cartItemService.updateCartItemById(dto));
     }
 
     @PostMapping("/increase_quantity")
-    public Result<Void> increaseCartItemQuantity(@RequestParam Integer cartItemId, @RequestParam Integer quantity) {
+    @Operation(summary = "增加商品数量", description = "增加购物车中商品的数量")
+    public Result<Void> increaseCartItemQuantity(@RequestParam @Parameter(description = "购物车商品ID") Integer cartItemId, @RequestParam @Parameter(description = "增加的数量") Integer quantity) {
         return Result.messageHandler(() -> cartItemService.increaseCartItemQuantity(cartItemId, quantity));
     }
 
     @PostMapping("/decrease_quantity")
-    public Result<Void> decreaseCartItemQuantity(@RequestParam Integer cartItemId, @RequestParam Integer quantity) {
+    @Operation(summary = "减少商品数量", description = "减少购物车中商品的数量")
+    public Result<Void> decreaseCartItemQuantity(@RequestParam @Parameter(description = "购物车商品ID") Integer cartItemId, @RequestParam @Parameter(description = "减少的数量") Integer quantity) {
         return Result.messageHandler(() -> cartItemService.decreaseCartItemQuantity(cartItemId, quantity));
+    }
+
+    @PostMapping("/change_quantity")
+    @Operation(summary = "修改商品数量", description = "修改购物车中商品的数量")
+    public Result<Void> changeCartItemQuantity(@RequestParam @Parameter(description = "购物车商品ID") Integer cartItemId, @RequestParam @Parameter(description = "修改的数量") Integer quantity) {
+        return Result.messageHandler(() -> cartItemService.changeCartItemQuantity(cartItemId, quantity));
     }
 }

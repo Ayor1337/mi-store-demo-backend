@@ -2,10 +2,10 @@ package com.example.config;
 
 import com.example.entity.pojo.Admin;
 import com.example.entity.vo.AuthorizeVO;
+import com.example.filter.JWTAuthorizeFilter;
 import com.example.result.Result;
 import com.example.result.ResultCodeEnum;
 import com.example.service.AdminService;
-import com.example.filter.JWTAuthorizeFilter;
 import com.example.util.JWTUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
@@ -44,6 +44,13 @@ public class SecurityConfiguration {
         return http
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/**").permitAll();
+                    auth.requestMatchers(
+                            "/doc.html",
+                            "/webjars/**",
+                            "/v3/api-docs/**",
+                            "/swagger-resources",
+                            "/favicon.ico"
+                    ).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(conf -> {

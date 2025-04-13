@@ -14,5 +14,10 @@ spring:
     jwt:
       secret-key: qwert123456
       expire: 7
+  minio:
+    endpoint: http://localhost:9000
+    access-key: admin
+    secret-key: qwert123
+    bucket: example
 server:
   port: 8081

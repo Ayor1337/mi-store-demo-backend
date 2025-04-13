@@ -9,8 +9,10 @@ import com.example.service.CartItemService;
 import com.example.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements CartService {
 
 
@@ -46,6 +48,30 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
 
         // 返回填充好的购物车视图对象
         return cartVO;
+    }
+
+    @Override
+    public String saveCart(Integer userId) {
+        if (userId == null) {
+            return "用户ID为空";
+        }
+        if (existsCartByUserId(userId)) {
+            return "该用户已存在购物车";
+        }
+        this.save(new Cart(null, userId, null));
+        return null;
+
+    }
+
+    @Override
+    public String deleteCartByUserId(Integer userId) {
+        if (userId == null || !existsCartByUserId(userId)) {
+            return "用户ID为空或该用户不存在购物车";
+        }
+        Cart cart = this.lambdaQuery().eq(Cart::getUserId, userId).one();
+        cartItemService.deleteAllCartItemByCartId(cart.getCartId());
+        this.removeById(cart.getCartId());
+        return null;
     }
 
     private boolean existsCartByUserId(Integer userId) {

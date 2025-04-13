@@ -1,74 +1,82 @@
 package com.example.controller;
 
+import com.example.entity.dto.Base64Upload;
 import com.example.entity.dto.ProductDTO;
 import com.example.entity.vo.ProductVO;
 import com.example.result.Result;
-import com.example.result.ResultCodeEnum;
-import com.example.service.CategoryService;
 import com.example.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
+@Tag(name = "商品管理", description = "与商品相关的操作")
 @Slf4j
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private CategoryService categoryService;
-
     @GetMapping("/list")
-    @Description("获取所有商品")
+    @Operation(summary = "获取所有商品", description = "获取商品列表")
     public Result<List<ProductVO>> getProductsAsList() {
-        List<ProductVO> productVO = productService.listProduct();
-        if (productVO == null)
-            return Result.build(null, ResultCodeEnum.DATA_NOT_FOUND);
-        return Result.ok(productVO);
+        return Result.dataMessageHandler(() -> productService.listProduct(), "获取商品列表失败");
     }
 
-
     @PostMapping("/save_product")
-    public Result<Void> saveProduct(@RequestBody ProductDTO dto) {
+    @Operation(summary = "保存商品", description = "创建一个新的商品")
+    public Result<Void> saveProduct(@RequestBody @Valid @Parameter(description = "商品详情") ProductDTO dto) {
         return Result.messageHandler(() -> productService.saveProduct(dto));
     }
 
-
     @DeleteMapping("/delete/{id}")
-    public Result<Void> deleteProduct(@PathVariable Integer id) {
+    @Operation(summary = "删除商品", description = "根据ID删除商品")
+    public Result<Void> deleteProduct(@PathVariable @Parameter(description = "商品ID") Integer id) {
         log.info("删除商品id：{}", id);
         return Result.messageHandler(() -> productService.deleteById(id));
     }
 
     @GetMapping("/get_product/{id}")
-    public Result<ProductVO> getProduct(@PathVariable Integer id) {
+    @Operation(summary = "获取商品详情", description = "根据ID获取商品详情")
+    public Result<ProductVO> getProduct(@PathVariable @Parameter(description = "商品ID") Integer id) {
         log.info("查询商品回写id：{}", id);
-        ProductVO product = productService.getProductById(id);
-        if (product == null)
-            return Result.fail(400, "商品不存在");
-        return Result.ok(product);
+        return Result.dataMessageHandler(() -> productService.getProductById(id), "商品不存在");
+    }
+
+    @GetMapping("/get_product_by_cid/{categoryId}")
+    @Operation(summary = "根据分类ID获取商品", description = "根据分类ID获取商品列表")
+    public Result<List<ProductVO>> getProductByCid(@PathVariable @Parameter(description = "分类ID") Integer categoryId) {
+        return Result.dataMessageHandler(() -> productService.getProductByCategoryId(categoryId), "商品不存在");
     }
 
     @PostMapping("/update")
-    public Result<Void> updateProduct(@RequestBody ProductDTO dto) {
+    @Operation(summary = "更新商品", description = "更新现有商品信息")
+    public Result<Void> updateProduct(@RequestBody @Valid @Parameter(description = "更新后的商品详情") ProductDTO dto) {
         return Result.messageHandler(() -> productService.updateProduct(dto));
     }
 
-    @PostMapping("/increase_stock")
-    public Result<Void> increaseStock(@RequestParam Integer productId, @RequestParam Integer quantity) {
-        return Result.messageHandler(() -> productService.increaseProductStock(productId, quantity));
+    @PostMapping("/upload_img/{productId}")
+    @Operation(summary = "上传商品图片", description = "为商品上传图片")
+    public Result<Void> uploadImg(@RequestBody @Parameter(description = "Base64编码的图片") Base64Upload file, @PathVariable @Parameter(description = "商品ID") Integer productId) {
+        return Result.messageHandler(() -> productService.updateImg(productId, file));
     }
 
-    @PostMapping("/decrease_stock")
-    public Result<Void> decreaseStock(@RequestParam Integer productId, @RequestParam Integer quantity) {
-        return Result.messageHandler(() -> productService.decreaseProductStock(productId, quantity));
+    @GetMapping("/get_img/{productId}")
+    @Operation(summary = "获取商品图片URL", description = "获取商品的图片URL")
+    public Result<String> getImgUrl(@PathVariable @Parameter(description = "商品ID") Integer productId) {
+        return Result.dataMessageHandler(() -> productService.getProductById(productId).getImageUrl(), "商品图片不存在");
     }
 
-
+    @DeleteMapping("/del_img/{productId}")
+    @Operation(summary = "删除商品图片", description = "删除商品的图片")
+    public Result<Void> deleteImg(@PathVariable @Parameter(description = "商品ID") Integer productId) {
+        return Result.messageHandler(() -> productService.deleteImg(productId));
+    }
 }
