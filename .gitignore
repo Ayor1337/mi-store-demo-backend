@@ -36,4 +36,4 @@ build/
 /.docker/environment/
 
 ### Configuration ###
-/web/src/main/resources/application-alipay.yml
+**/application-alipay-yml
