@@ -26,11 +26,11 @@ public class OrderItem implements Serializable {
     private Integer orderId;       // 订单ID
 
     @Schema(description = "商品ID")
-    private Integer productId;     // 商品ID
+    private Integer commodityId;     // 商品ID
 
     @Schema(description = "购买数量")
     private Integer quantity;      // 购买数量
 
-    @Schema(description = "购买时的单价")
+    @Schema(description = "单价")
     private BigDecimal price;      // 购买时的单价
 }

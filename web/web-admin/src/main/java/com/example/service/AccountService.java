@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AccountService extends IService<Account> {
 
-    List<AccountVO> listAccount();
+    List<AccountVO> listAccounts();
 
     AccountVO getAccountById(Integer id);
 

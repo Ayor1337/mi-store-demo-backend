@@ -10,8 +10,8 @@ import com.example.entity.vo.CommodityVO;
 import com.example.mapper.CartItemMapper;
 import com.example.service.CartItemService;
 import com.example.service.CommodityService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +23,10 @@ import java.util.List;
 @Transactional
 public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> implements CartItemService {
 
-    @Autowired
+    @Resource
     CommodityService commodityService;
 
-
+    // 根据购物车ID获取购物车内所有项目
     @Override
     public List<CartItemVO> getCartItemVOByCartId(Integer cartId) {
         List<CartItemVO> cartItemVOList = new LinkedList<>();
@@ -46,39 +46,31 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
         return cartItemVOList;
     }
 
-    @Override
-    public String saveCartItem(CartItemDTO dto) {
-        System.out.println(dto);
-        if (dto == null || existsCartItemById(dto.getCartItemId())) {
-            return "该购物车记录已存在或传入参数不存在";
-        }
-        Integer quantity = dto.getQuantity();
-        Commodity commodity = commodityService.getById(dto.getCommodityId());
-        if (quantity == null || quantity <= 0) {
-            return "购物数量必须大于0";
-        }
-        if (quantity > commodity.getStock()) {
-            return "库存数量不足";
-        }
-        CartItem cartItem = new CartItem();
-        BeanUtils.copyProperties(dto, cartItem);
-        this.save(cartItem);
-        commodityService.decreaseCommodityStock(dto.getCommodityId(), quantity);
-        return null;
-    }
-
+    // 删除购物车记录
     @Override
     public String deleteCartItemById(Integer cartItemId) {
         CartItem cartItem = this.getById(cartItemId);
         if (cartItem == null) {
             return "购物车记录不存在";
         }
-        commodityService.increaseCommodityStock(cartItem.getCommodityId(), cartItem.getQuantity());
+        final String messageFromIncreaseCommodityStock = commodityService.increaseCommodityStock(cartItem.getCommodityId(), cartItem.getQuantity());
+        if (messageFromIncreaseCommodityStock != null) {
+            return messageFromIncreaseCommodityStock;
+        }
         this.removeById(cartItemId);
         return null;
     }
 
+    @Override
+    public String batchDeleteByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return "购物车记录不存在";
+        }
+        this.removeBatchByIds(ids);
+        return null;
+    }
 
+    // 通过购物车ID删除购物车内所有项目
     @Override
     public String deleteAllCartItemByCartId(Integer cartId) {
         if (!existsCartItemById(cartId)) {
@@ -94,6 +86,7 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
         return null;
     }
 
+    // 通过商品ID删除购物车内所有项目
     @Override
     public String deleteAllCartItemByProductId(Integer productId) {
         commodityService.lambdaQuery()
@@ -104,13 +97,35 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
                     this.lambdaQuery()
                             .eq(CartItem::getCommodityId, commodity.getCommodityId())
                             .list()
-                            .forEach(cartItem -> {
-                                this.removeById(cartItem.getCartItemId());
-                            });
+                            .forEach(cartItem ->
+                                    this.removeById(cartItem.getCartItemId())
+                            );
                 });
         return null;
     }
 
+    // 添加购物车记录
+    @Override
+    public String saveCartItem(CartItemDTO dto) {
+        if (dto == null || existsCartItemById(dto.getCartItemId())) {
+            return "该购物车记录已存在或传入参数不存在";
+        }
+        Integer quantity = dto.getQuantity();
+        Commodity commodity = commodityService.getById(dto.getCommodityId());
+        if (quantity == null || quantity <= 0) {
+            return "购物数量必须大于0";
+        }
+        if (quantity > commodity.getStock()) {
+            return "库存数量不足";
+        }
+        CartItem cartItem = new CartItem();
+        BeanUtils.copyProperties(dto, cartItem);
+        this.save(cartItem);
+
+        return commodityService.decreaseCommodityStock(dto.getCommodityId(), quantity);
+    }
+
+    // 更新购物车记录
     @Override
     public String updateCartItemById(CartItemDTO dto) {
         if (dto == null || !existsCartItemById(dto.getCartItemId())) {
@@ -126,7 +141,7 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
         return null;
     }
 
-
+    // 增加购物车记录中的数量单位
     @Override
     public String increaseCartItemQuantity(Integer cartItemId, Integer quantity) {
         CartItem cartItem = this.getById(cartItemId);
@@ -141,12 +156,15 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
             return "库存数量不足";
         }
         cartItem.setQuantity(cartItem.getQuantity() + quantity);
-        commodityService.decreaseCommodityStock(cartItem.getCommodityId(), quantity);
+        final String messageFromDecreaseCommodityStock = commodityService.decreaseCommodityStock(cartItem.getCommodityId(), quantity);
+        if (messageFromDecreaseCommodityStock != null) {
+            return messageFromDecreaseCommodityStock;
+        }
         this.updateById(cartItem);
         return null;
     }
 
-
+    // 减少购物车记录中的数量单位
     @Override
     public String decreaseCartItemQuantity(Integer cartItemId, Integer quantity) {
         CartItem cartItem = this.getById(cartItemId);
@@ -166,6 +184,7 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
         return null;
     }
 
+    // 修改购物车记录中的数量单位
     @Override
     public String changeCartItemQuantity(Integer cartItemId, Integer quantity) {
         CartItem cartItem = this.getById(cartItemId);
@@ -191,7 +210,7 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
         return message;
     }
 
-
+    // 判断购物车记录是否存在
     public boolean existsCartItemById(Integer cartItemId) {
         return this.baseMapper.exists(Wrappers.<CartItem>lambdaQuery().eq(CartItem::getCartItemId, cartItemId));
     }

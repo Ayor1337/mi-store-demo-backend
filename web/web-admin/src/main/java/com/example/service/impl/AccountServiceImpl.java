@@ -9,8 +9,8 @@ import com.example.entity.vo.AccountVO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.service.CartService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +28,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Autowired
+    @Resource
     private CartService cartService;
 
+    // 获取所有用户
     @Override
-    public List<AccountVO> listAccount() {
+    public List<AccountVO> listAccounts() {
         List<Account> list = this.list();
         List<AccountVO> voList = new ArrayList<>();
         if (list == null)
@@ -45,6 +46,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return voList;
     }
 
+    // 根据id获取用户
     @Override
     public AccountVO getAccountById(Integer id) {
         Account account = this.getById(id);
@@ -56,6 +58,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return accountVO;
     }
 
+    // 保存用户
     @Override
     public String saveAccount(AccountDTO dto) {
         if (dto == null || existsAccountById(dto.getUserId())) {
@@ -71,6 +74,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return cartService.saveCart(account.getUserId());
     }
 
+    // 根据id删除用户
     @Override
     public String deleteAccountById(Integer id) {
         if (id == null || !existsAccountById(id)) {
@@ -83,6 +87,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return null;
     }
 
+    // 更新用户
     @Override
     public String updateAccount(AccountDTO dto) {
         if (dto == null || !existsAccountById(dto.getUserId())) {
@@ -94,6 +99,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return null;
     }
 
+    // 根据ID判断用户是否存在
     private boolean existsAccountById(Integer userId) {
         return this.baseMapper.exists(Wrappers.<Account>lambdaQuery().eq(Account::getUserId, userId));
     }

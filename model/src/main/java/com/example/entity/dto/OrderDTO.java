@@ -1,10 +1,7 @@
 package com.example.entity.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 @Schema(name = "OrderDTO", description = "订单信息上传对象")
@@ -15,10 +12,6 @@ public class OrderDTO {
 
     @Schema(description = "用户ID")
     private Integer userId;
-
-    @Schema(description = "订单总价")
-    @Min(value = 0, message = "价格必须大于或等于0")
-    private BigDecimal totalPrice;
 
     @Schema(description = "订单状态")
     private String status;

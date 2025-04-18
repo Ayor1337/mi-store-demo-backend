@@ -40,7 +40,7 @@ public class ProductController {
     @Operation(summary = "删除商品", description = "根据ID删除商品")
     public Result<Void> deleteProduct(@PathVariable @Parameter(description = "商品ID") Integer id) {
         log.info("删除商品id：{}", id);
-        return Result.messageHandler(() -> productService.deleteById(id));
+        return Result.messageHandler(() -> productService.deleteProductById(id));
     }
 
     @GetMapping("/get_product/{id}")

@@ -15,7 +15,7 @@ public interface ProductService extends IService<Product> {
 
     String saveProduct(ProductDTO vo);
 
-    String deleteById(Integer id);
+    String deleteProductById(Integer id);
 
     ProductVO getProductById(Integer id);
 

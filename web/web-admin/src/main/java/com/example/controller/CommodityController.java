@@ -47,7 +47,7 @@ public class CommodityController {
     @Operation(summary = "删除商品", description = "根据商品ID删除商品")
     @Parameter(name = "id", description = "商品ID", required = true)
     public Result<Void> deleteById(@PathVariable Integer id) {
-        return Result.messageHandler(() -> commodityService.deleteById(id));
+        return Result.messageHandler(() -> commodityService.deleteCommodityById(id));
     }
 
     @PostMapping("/save")

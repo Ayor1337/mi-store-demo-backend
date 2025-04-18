@@ -41,6 +41,6 @@ public class CategoryController {
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除分类", description = "根据ID删除分类")
     public Result<Void> deleteCategory(@PathVariable @Parameter(description = "分类ID") Integer id) {
-        return Result.messageHandler(() -> categoryService.removeCategoryById(id));
+        return Result.messageHandler(() -> categoryService.deleteCategoryById(id));
     }
 }

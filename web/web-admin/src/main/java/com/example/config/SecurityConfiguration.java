@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                             "/swagger-resources",
                             "/favicon.ico"
                     ).permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .formLogin(conf -> {
                     conf.loginProcessingUrl("/api/auth/login");

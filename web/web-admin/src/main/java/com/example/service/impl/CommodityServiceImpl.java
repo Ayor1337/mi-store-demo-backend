@@ -9,9 +9,9 @@ import com.example.entity.vo.CommodityWithFullNameVO;
 import com.example.mapper.CommodityMapper;
 import com.example.minio.MinioService;
 import com.example.service.CommodityService;
+import jakarta.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +24,10 @@ import java.util.Map;
 @Transactional
 public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity> implements CommodityService {
 
-
-    @Autowired
+    @Resource
     MinioService minioService;
 
+    // 获取所有商品
     @Override
     public List<CommodityVO> getCommodityVOs() {
         List<CommodityVO> vo = new LinkedList<>();
@@ -39,14 +39,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return vo;
     }
 
-    @Override
-    public CommodityVO getCommodityVOById(Integer id) {
-        CommodityVO commodityVO = new CommodityVO();
-        Commodity commodity = this.getById(id);
-        BeanUtils.copyProperties(commodity, commodityVO);
-        return commodityVO;
-    }
-
+    // 通过ID获取商品
     @Override
     public CommodityVO getCommodityById(Integer id) {
         CommodityVO commodityVO = new CommodityVO();
@@ -62,6 +55,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return commodityVO;
     }
 
+    // 通过产品ID获取商品
     @Override
     public List<CommodityVO> getCommodityVOsByProductId(Integer productId) {
         List<CommodityVO> vo = new LinkedList<>();
@@ -76,8 +70,9 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return vo;
     }
 
+    // 通过ID删除商品
     @Override
-    public String deleteById(Integer id) {
+    public String deleteCommodityById(Integer id) {
         if (id == null) {
             return "id为空";
         }
@@ -85,6 +80,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    // 通过产品ID删除商品
     @Override
     public String deleteCommodityByProductId(Integer productId) {
         if (productId == null) {
@@ -94,6 +90,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    // 保存商品
     @Override
     public String saveCommodity(CommodityDTO dto) {
         if (dto == null) {
@@ -107,6 +104,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    // 更新商品
     @Override
     public String updateCommodity(CommodityDTO dto) {
         if (dto == null) {
@@ -121,6 +119,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    // 上传图片
     @NotNull
     private StringBuilder uploadImages(CommodityDTO dto) {
         StringBuilder image_urls = new StringBuilder();
@@ -139,6 +138,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return image_urls;
     }
 
+    // 增加商品库存
     @Override
     public String increaseCommodityStock(Integer commodityId, Integer quantity) {
         Commodity commodity = this.getById(commodityId);
@@ -153,6 +153,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    // 减少商品库存
     @Override
     public String decreaseCommodityStock(Integer commodityId, Integer quantity) {
         Commodity commodity = this.getById(commodityId);
@@ -170,6 +171,21 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    @Override
+    public String changeCommodityStock(Integer commodityId, Integer quantity) {
+        Commodity commodity = this.getById(commodityId);
+        if (quantity == null || quantity <= 0) {
+            return "购物数量必须大于0";
+        }
+        if (commodity == null) {
+            return "商品不存在";
+        }
+        commodity.setStock(quantity);
+        this.updateById(commodity);
+        return null;
+    }
+
+    // 通过产品ID获取商品全称
     @Override
     public List<CommodityWithFullNameVO> getFullNameListByProductId(Integer productId) {
         List<CommodityWithFullNameVO> list = new LinkedList<>();

@@ -2,32 +2,32 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.entity.dto.OrderDTO;
+import com.example.entity.message.SubmitOrderMessage;
 import com.example.entity.pojo.Cart;
 import com.example.entity.vo.CartVO;
 import com.example.mapper.CartMapper;
 import com.example.service.CartItemService;
 import com.example.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements CartService {
 
 
-    @Autowired
+    @Resource
     CartItemService cartItemService;
 
-    /**
-     * 根据用户ID获取购物车视图对象
-     * <p>
-     * 此方法首先会根据用户ID查询对应的购物车记录，以获取购物车ID
-     * 然后，使用这个购物车ID来查询购物车中的所有商品项，并将其设置到购物车视图对象中
-     *
-     * @param userId 用户ID，用于查询购物车信息
-     * @return 返回一个包含购物车ID和购物车商品项的购物车视图对象
-     */
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
+    // 根据用户ID获取购物车视图对象
     @Override
     public CartVO getCartVOByUserId(Integer userId) {
         if (userId == null || !existsCartByUserId(userId)) {
@@ -50,6 +50,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         return cartVO;
     }
 
+    // 保存购物车
     @Override
     public String saveCart(Integer userId) {
         if (userId == null) {
@@ -63,17 +64,36 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
 
     }
 
+    // 根据用户ID删除购物车
     @Override
     public String deleteCartByUserId(Integer userId) {
         if (userId == null || !existsCartByUserId(userId)) {
             return "用户ID为空或该用户不存在购物车";
         }
         Cart cart = this.lambdaQuery().eq(Cart::getUserId, userId).one();
-        cartItemService.deleteAllCartItemByCartId(cart.getCartId());
+        String messageFromDeleteAllCartItemByCartId = cartItemService.deleteAllCartItemByCartId(cart.getCartId());
+
+        if (messageFromDeleteAllCartItemByCartId != null) {
+            return messageFromDeleteAllCartItemByCartId;
+        }
+
         this.removeById(cart.getCartId());
         return null;
     }
 
+    @Override
+    public String submitCart(OrderDTO orderDTO, List<Integer> cartItemIds) {
+        SubmitOrderMessage submitOrderMessage = new SubmitOrderMessage();
+        submitOrderMessage.setOrderDTO(orderDTO);
+        submitOrderMessage.setCartItemIds(cartItemIds);
+
+        rabbitTemplate.convertAndSend("amq.direct", "submit_order", submitOrderMessage);
+
+
+        return null;
+    }
+
+    // 判断用户是否存在购物车
     private boolean existsCartByUserId(Integer userId) {
         return this.baseMapper.exists(Wrappers.<Cart>lambdaQuery().eq(Cart::getUserId, userId));
     }

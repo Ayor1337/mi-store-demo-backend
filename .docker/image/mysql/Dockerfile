@@ -1,4 +1,4 @@
-FROM mysql:9.2.0
+FROM mysql:latest
 ADD ./store_schema.sql /docker-entrypoint-initdb.d/store_schema.sql
 RUN chown -R mysql:mysql /docker-entrypoint-initdb.d/store_schema.sql
 EXPOSE 3306

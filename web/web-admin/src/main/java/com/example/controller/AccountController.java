@@ -7,8 +7,8 @@ import com.example.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +18,13 @@ import java.util.List;
 @Tag(name = "用户管理", description = "与用户相关的操作")
 public class AccountController {
 
-    @Autowired
+    @Resource
     private AccountService accountService;
 
     @GetMapping("/list")
     @Operation(summary = "获取用户列表", description = "获取所有用户信息")
     public Result<List<AccountVO>> getAccountsAsList() {
-        return Result.dataMessageHandler(() -> accountService.listAccount(), "用户列表为空");
+        return Result.dataMessageHandler(() -> accountService.listAccounts(), "用户列表为空");
     }
 
     @PostMapping("/save_user")

@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
+    // 查询所有分类数据
     @Override
     public List<CategoryVO> listCategory() {
         // 1. 查询所有分类数据
@@ -29,6 +30,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     }
 
+    // 根据分类ID获取分类名称
     @Override
     public String getCategoryNameById(Integer categoryId) {
         Category category = getById(categoryId);
@@ -38,6 +40,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return null;
     }
 
+    // 保存分类信息
     @Override
     public String saveCategory(CategoryDTO dto) {
         if (dto == null) {
@@ -49,6 +52,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return null;
     }
 
+    // 根据分类ID获取分类信息
     @Override
     public CategoryVO getCategoryById(Integer categoryId) {
         if (categoryId == null) {
@@ -61,8 +65,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return categoryVO;
     }
 
+    // 根据分类ID删除分类信息
     @Override
-    public String removeCategoryById(Integer categoryId) {
+    public String deleteCategoryById(Integer categoryId) {
         //TODO 不能删除已经有商品的分类
         if (categoryId == null) {
             return "id为空";

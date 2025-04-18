@@ -12,9 +12,9 @@ import com.example.service.CartItemService;
 import com.example.service.CommodityService;
 import com.example.service.ProductService;
 import com.example.util.ImageUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +26,17 @@ import java.util.List;
 @Slf4j
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
 
-    @Autowired
+    @Resource
     private MinioService minioService;
 
-    @Autowired
+    @Resource
     private CommodityService commodityService;
 
-    @Autowired
+    @Resource
     private CartItemService cartItemService;
 
+
+    // 获取商品列表
     @Override
     public List<ProductVO> listProduct() {
         List<Product> list = this.list();
@@ -45,6 +47,19 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }).toList();
     }
 
+    // 通过ID获取商品
+    @Override
+    public ProductVO getProductById(Integer id) {
+        Product product = this.lambdaQuery().eq(Product::getProductId, id).one();
+        if (product == null) {
+            return null;
+        }
+        ProductVO productVO = new ProductVO();
+        BeanUtils.copyProperties(product, productVO);
+        return productVO;
+    }
+
+    // 根据分类ID获取商品列表
     @Override
     public List<ProductVO> getProductByCategoryId(Integer categoryId) {
         List<ProductVO> voList = new ArrayList<>();
@@ -58,6 +73,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return voList;
     }
 
+    // 保存商品
     @Override
     public String saveProduct(ProductDTO dto) {
         if (dto == null) {
@@ -85,32 +101,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return null;
     }
 
-    @Override
-    public String deleteById(Integer id) {
-        if (!existProductById(id)) {
-            return "商品不存在";
-        }
-        cartItemService.deleteAllCartItemByProductId(id);
-        commodityService.deleteCommodityByProductId(id);
-        this.removeById(id);
-        return null;
-    }
-
-    public boolean existProductById(Integer id) {
-        return this.exists(Wrappers.<Product>lambdaQuery().eq(Product::getProductId, id));
-    }
-
-    @Override
-    public ProductVO getProductById(Integer id) {
-        Product product = this.lambdaQuery().eq(Product::getProductId, id).one();
-        if (product == null) {
-            return null;
-        }
-        ProductVO productVO = new ProductVO();
-        BeanUtils.copyProperties(product, productVO);
-        return productVO;
-    }
-
+    // 更新商品
     @Override
     public String updateProduct(ProductDTO dto) {
         if (dto == null) {
@@ -126,6 +117,27 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return null;
     }
 
+    // 通过ID删除商品
+    @Override
+    public String deleteProductById(Integer id) {
+        if (!existProductById(id)) {
+            return "商品不存在";
+        }
+        final String messageFormDeleteAllCartItemByProductId = cartItemService.deleteAllCartItemByProductId(id);
+        if (messageFormDeleteAllCartItemByProductId != null) {
+            return messageFormDeleteAllCartItemByProductId;
+        }
+
+        final String messageFormDeleteCommodityByProductId = commodityService.deleteCommodityByProductId(id);
+        if (messageFormDeleteCommodityByProductId != null) {
+            return messageFormDeleteCommodityByProductId;
+        }
+
+        this.removeById(id);
+        return null;
+    }
+
+    // Minio上传更新商品图片
     @Override
     public String updateImg(Integer productId, Base64Upload file) {
         if (file == null) {
@@ -140,6 +152,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
     }
 
+    // 数据库更新商品图片URL
     @Override
     public String updateImgUrl(Integer productId, String fileUrl) {
         Product product = this.getById(productId);
@@ -151,6 +164,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return null;
     }
 
+    // 删除商品图片
     @Override
     public String deleteImg(Integer productId) {
         String url = getProductById(productId).getImageUrl();
@@ -165,6 +179,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return deleteImgUrl(productId);
     }
 
+    // 删除商品图片URL
     @Override
     public String deleteImgUrl(Integer productId) {
         if (!existProductById(productId)) {
@@ -175,5 +190,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
         this.lambdaUpdate().eq(Product::getProductId, productId).set(Product::getImageUrl, null).update();
         return null;
+    }
+
+    // 判断商品是否存在
+    public boolean existProductById(Integer id) {
+        return this.exists(Wrappers.<Product>lambdaQuery().eq(Product::getProductId, id));
     }
 }

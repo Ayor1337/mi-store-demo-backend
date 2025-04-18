@@ -14,6 +14,8 @@ public interface CartItemService extends IService<CartItem> {
 
     String deleteCartItemById(Integer cartItemId);
 
+    String batchDeleteByIds(List<Integer> ids);
+
     String deleteAllCartItemByCartId(Integer userId);
 
     String deleteAllCartItemByProductId(Integer productId);

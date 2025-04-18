@@ -20,5 +20,12 @@ spring:
     access-key: admin
     secret-key: qwert123
     bucket: example
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /mistore
+
 
 

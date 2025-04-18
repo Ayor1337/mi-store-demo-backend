@@ -11,13 +11,11 @@ import java.util.List;
 public interface CommodityService extends IService<Commodity> {
     List<CommodityVO> getCommodityVOs();
 
-    CommodityVO getCommodityVOById(Integer id);
-
     CommodityVO getCommodityById(Integer id);
 
     List<CommodityVO> getCommodityVOsByProductId(Integer productId);
 
-    String deleteById(Integer id);
+    String deleteCommodityById(Integer id);
 
     String deleteCommodityByProductId(Integer productId);
 
@@ -25,9 +23,11 @@ public interface CommodityService extends IService<Commodity> {
 
     String updateCommodity(CommodityDTO dto);
 
-    String increaseCommodityStock(Integer productId, Integer quantity);
+    String increaseCommodityStock(Integer commodityId, Integer quantity);
 
-    String decreaseCommodityStock(Integer productId, Integer quantity);
+    String decreaseCommodityStock(Integer commodityId, Integer quantity);
+
+    String changeCommodityStock(Integer commodityId, Integer quantity);
 
     List<CommodityWithFullNameVO> getFullNameListByProductId(Integer productId);
 }
