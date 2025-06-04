@@ -56,6 +56,12 @@ public class ProductController {
         return Result.dataMessageHandler(() -> productService.getProductByCategoryId(categoryId), "商品不存在");
     }
 
+    @GetMapping("/search")
+    @Operation(summary = "搜索商品", description = "根据关键词搜索商品")
+    public Result<List<ProductVO>> searchProducts(@RequestParam String keyword) {
+        return Result.dataMessageHandler(() -> productService.searchProducts(keyword), "搜索失败");
+    }
+
     @PostMapping("/update")
     @Operation(summary = "更新商品", description = "更新现有商品信息")
     public Result<Void> updateProduct(@RequestBody @Valid @Parameter(description = "更新后的商品详情") ProductDTO dto) {

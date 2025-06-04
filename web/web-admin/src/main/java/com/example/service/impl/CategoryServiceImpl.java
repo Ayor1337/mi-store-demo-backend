@@ -75,4 +75,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         this.removeById(categoryId);
         return null;
     }
+
+    // 根据关键字搜索分类名称并返回匹配的分类ID列表
+    @Override
+    public List<Integer> searchCategoryIds(String keyword) {
+        return this.lambdaQuery()
+                .like(Category::getName, keyword)
+                .list()
+                .stream()
+                .map(Category::getCategoryId)
+                .toList();
+    }
 }
