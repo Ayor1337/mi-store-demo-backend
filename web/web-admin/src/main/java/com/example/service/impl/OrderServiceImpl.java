@@ -2,12 +2,14 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.OrderDTO;
+import com.example.entity.admin.dto.OrderDTO;
+import com.example.entity.admin.vo.DeliveryAddressVO;
+import com.example.entity.admin.vo.OrderVO;
 import com.example.entity.pojo.Order;
 import com.example.entity.pojo.OrderItem;
-import com.example.entity.vo.OrderVO;
 import com.example.event.OrderPriceChangeEvent;
 import com.example.mapper.OrderMapper;
+import com.example.service.DeliveryAddressService;
 import com.example.service.OrderItemService;
 import com.example.service.OrderService;
 import jakarta.annotation.Resource;
@@ -25,6 +27,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Resource
     private OrderItemService orderItemService;
+
+    @Resource
+    private DeliveryAddressService deliveryAddressService;
 
     @EventListener
     public void handleOrderPriceChangeEvent(OrderPriceChangeEvent event) {
@@ -47,6 +52,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             for (OrderItem orderItem : orderItemService.lambdaQuery().eq(OrderItem::getOrderId, order.getOrderId()).list()) {
                 totalPrice = totalPrice.add(orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity())));
             }
+            DeliveryAddressVO deliveryAddressById = deliveryAddressService.getDeliveryAddressById(order.getAddressId());
+            orderVO.setAddress(deliveryAddressById.getAddress());
             BeanUtils.copyProperties(order, orderVO);
             orderVO.setTotalPrice(totalPrice);
             voList.add(orderVO);
@@ -62,6 +69,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         OrderVO orderVO = new OrderVO();
         BeanUtils.copyProperties(order, orderVO);
+        DeliveryAddressVO deliveryAddressById = deliveryAddressService.getDeliveryAddressById(order.getAddressId());
+        orderVO.setAddress(deliveryAddressById.getAddress());
         return orderVO;
     }
 
@@ -74,6 +83,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         this.lambdaQuery().eq(Order::getUserId, userId).list().forEach(order -> {
             OrderVO orderVO = new OrderVO();
             BeanUtils.copyProperties(order, orderVO);
+            DeliveryAddressVO deliveryAddressById = deliveryAddressService.getDeliveryAddressById(order.getAddressId());
+            orderVO.setAddress(deliveryAddressById.getAddress());
             voList.add(orderVO);
         });
         return voList;

@@ -1,9 +1,9 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.dto.CategoryDTO;
+import com.example.entity.admin.dto.CategoryDTO;
+import com.example.entity.admin.vo.CategoryVO;
 import com.example.entity.pojo.Category;
-import com.example.entity.vo.CategoryVO;
 
 import java.util.List;
 

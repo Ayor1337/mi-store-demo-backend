@@ -1,9 +1,9 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.CategoryDTO;
+import com.example.entity.admin.dto.CategoryDTO;
+import com.example.entity.admin.vo.CategoryVO;
 import com.example.entity.pojo.Category;
-import com.example.entity.vo.CategoryVO;
 import com.example.mapper.CategoryMapper;
 import com.example.service.CategoryService;
 import org.springframework.beans.BeanUtils;

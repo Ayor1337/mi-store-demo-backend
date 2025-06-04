@@ -2,10 +2,10 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.OrderDTO;
+import com.example.entity.admin.dto.OrderDTO;
+import com.example.entity.admin.vo.CartVO;
 import com.example.entity.message.SubmitOrderMessage;
 import com.example.entity.pojo.Cart;
-import com.example.entity.vo.CartVO;
 import com.example.mapper.CartMapper;
 import com.example.service.CartItemService;
 import com.example.service.CartService;
@@ -19,7 +19,6 @@ import java.util.List;
 @Service
 @Transactional
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements CartService {
-
 
     @Resource
     CartItemService cartItemService;
@@ -44,15 +43,15 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         cartVO.setCartId(cartId);
 
         // 查询并设置购物车中的所有商品项
-        cartVO.setCartItems(cartItemService.getCartItemVOByCartId(cartId));
+        cartVO.setCartItems(cartItemService.getCartItemVOsByCartId(cartId));
 
         // 返回填充好的购物车视图对象
         return cartVO;
     }
 
-    // 保存购物车
+    // 为所有的新用户创建一个购物车
     @Override
-    public String saveCart(Integer userId) {
+    public String createCartByUserId(Integer userId) {
         if (userId == null) {
             return "用户ID为空";
         }
@@ -81,6 +80,8 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         return null;
     }
 
+
+    // 提交购物车
     @Override
     public String submitCart(OrderDTO orderDTO, List<Integer> cartItemIds) {
         SubmitOrderMessage submitOrderMessage = new SubmitOrderMessage();

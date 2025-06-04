@@ -1,9 +1,9 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.dto.OrderItemDTO;
+import com.example.entity.admin.dto.OrderItemDTO;
+import com.example.entity.admin.vo.OrderItemVO;
 import com.example.entity.pojo.OrderItem;
-import com.example.entity.vo.OrderItemVO;
 
 import java.util.List;
 

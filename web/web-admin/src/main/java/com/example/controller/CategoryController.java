@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.entity.dto.CategoryDTO;
-import com.example.entity.vo.CategoryVO;
+import com.example.entity.admin.dto.CategoryDTO;
+import com.example.entity.admin.vo.CategoryVO;
 import com.example.result.Result;
 import com.example.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;

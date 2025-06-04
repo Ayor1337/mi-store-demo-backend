@@ -13,8 +13,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/alipay/**").permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();

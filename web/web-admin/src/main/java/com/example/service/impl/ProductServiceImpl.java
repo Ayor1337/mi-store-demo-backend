@@ -2,10 +2,10 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.Base64Upload;
-import com.example.entity.dto.ProductDTO;
+import com.example.entity.admin.dto.Base64Upload;
+import com.example.entity.admin.dto.ProductDTO;
+import com.example.entity.admin.vo.ProductVO;
 import com.example.entity.pojo.Product;
-import com.example.entity.vo.ProductVO;
 import com.example.mapper.ProductMapper;
 import com.example.minio.MinioService;
 import com.example.service.CartItemService;
@@ -145,6 +145,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
         try {
             String url = minioService.uploadBase64(file);
+            System.out.println(url);
             return updateImgUrl(productId, url);
         } catch (Exception e) {
             log.error("上传图片失败", e);

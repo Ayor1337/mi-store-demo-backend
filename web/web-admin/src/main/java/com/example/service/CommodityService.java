@@ -1,10 +1,10 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.dto.CommodityDTO;
+import com.example.entity.admin.dto.CommodityDTO;
+import com.example.entity.admin.vo.CommodityVO;
+import com.example.entity.admin.vo.CommodityWithFullNameVO;
 import com.example.entity.pojo.Commodity;
-import com.example.entity.vo.CommodityVO;
-import com.example.entity.vo.CommodityWithFullNameVO;
 
 import java.util.List;
 

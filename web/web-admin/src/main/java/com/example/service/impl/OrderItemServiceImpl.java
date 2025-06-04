@@ -1,10 +1,10 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.OrderItemDTO;
+import com.example.entity.admin.dto.OrderItemDTO;
+import com.example.entity.admin.vo.OrderItemVO;
 import com.example.entity.pojo.Commodity;
 import com.example.entity.pojo.OrderItem;
-import com.example.entity.vo.OrderItemVO;
 import com.example.event.OrderPriceChangeEvent;
 import com.example.mapper.OrderItemMapper;
 import com.example.service.CommodityService;

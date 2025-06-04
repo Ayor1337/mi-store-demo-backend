@@ -23,6 +23,9 @@ public class AlipayController {
     @ResponseBody
     public String pay(@RequestParam Integer orderId) throws AlipayApiException {
         PayOrder payOrder = orderService.createPayOrder(orderId);
+        if (payOrder == null) {
+            return "订单已过期";
+        }
         return alipayTemplate.pay(payOrder);
     }
 

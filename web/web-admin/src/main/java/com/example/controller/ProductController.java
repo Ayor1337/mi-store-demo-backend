@@ -1,8 +1,8 @@
 package com.example.controller;
 
-import com.example.entity.dto.Base64Upload;
-import com.example.entity.dto.ProductDTO;
-import com.example.entity.vo.ProductVO;
+import com.example.entity.admin.dto.Base64Upload;
+import com.example.entity.admin.dto.ProductDTO;
+import com.example.entity.admin.vo.ProductVO;
 import com.example.result.Result;
 import com.example.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -30,4 +30,7 @@ public class CartItem implements Serializable {
 
     @Schema(description = "添加数量")
     private Integer quantity;     // 添加数量
+
+    @Schema(description = "用户是否勾选")
+    private Boolean isChecked;
 }

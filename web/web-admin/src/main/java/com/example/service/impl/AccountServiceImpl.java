@@ -3,10 +3,12 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.AccountDTO;
+import com.example.entity.admin.dto.AccountDTO;
+import com.example.entity.admin.dto.Base64Upload;
+import com.example.entity.admin.vo.AccountVO;
 import com.example.entity.pojo.Account;
-import com.example.entity.vo.AccountVO;
 import com.example.mapper.AccountMapper;
+import com.example.minio.MinioService;
 import com.example.service.AccountService;
 import com.example.service.CartService;
 import jakarta.annotation.Resource;
@@ -31,9 +33,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Resource
     private CartService cartService;
 
+    @Resource
+    private MinioService minioService;
+
     // 获取所有用户
     @Override
-    public List<AccountVO> listAccounts() {
+    public List<AccountVO> getAllAccountVOs() {
         List<Account> list = this.list();
         List<AccountVO> voList = new ArrayList<>();
         if (list == null)
@@ -71,7 +76,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         account.setPhone(dto.getPhone());
         account.setAddress(dto.getAddress());
         this.save(account);
-        return cartService.saveCart(account.getUserId());
+        return cartService.createCartByUserId(account.getUserId());
     }
 
     // 根据id删除用户
@@ -81,7 +86,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return "用户不存在或参数为空";
         }
         if (cartService.deleteCartByUserId(id) != null) {
-            return "删除购物车失败";
+            return "删除用户购物车失败";
         }
         this.removeById(id);
         return null;
@@ -95,6 +100,38 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         Account account = new Account();
         BeanUtils.copyProperties(dto, account);
+        this.updateById(account);
+        return null;
+    }
+
+    @Override
+    public String getAvatarUrlById(Integer userId) {
+        return this.getById(userId).getAvatarUrl();
+    }
+
+    @Override
+    public String saveAvatar(Integer userId, Base64Upload file) {
+        if (file == null) {
+            return "图片为空";
+        }
+        try {
+            String url = minioService.uploadAvatar(file);
+            return updateAvatarUrl(userId, url);
+        } catch (Exception e) {
+            return "内部发生错误";
+        }
+    }
+
+    @Override
+    public String updateAvatarUrl(Integer userId, String fileUrl) {
+        if (fileUrl == null) {
+            return "图片为空";
+        }
+        Account account = this.getById(userId);
+        if (account == null) {
+            return "用户不存在";
+        }
+        account.setAvatarUrl(fileUrl);
         this.updateById(account);
         return null;
     }

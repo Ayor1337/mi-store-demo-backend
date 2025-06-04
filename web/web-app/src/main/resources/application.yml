@@ -1,6 +1,10 @@
 spring:
   application:
     name: Xiaomi-store-project
+  mail:
+    host: smtp.163.com
+    username: ayor1337@163.com
+    password: WEWshPE62xYFUTxr
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_store
@@ -19,5 +23,17 @@ spring:
     access-key: admin
     secret-key: qwert123
     bucket: example
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /mistore
+    listener:
+      simple:
+        acknowledge-mode: manual
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.entity.pojo
 server:
-  port: 8081
+  port: 9090

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.OrderMapper">
+
+    <select id="getCommodityInOrderItemByCartId"
+            parameterType="int"
+            resultType="com.example.entity.mapperResult.CommodityInOrderItem">
+        SELECT Commodities.commodity_id,
+               CartItems.quantity,
+               Commodities.price
+        FROM Cart
+                 INNER JOIN CartItems
+                            ON Cart.cart_id = CartItems.cart_id
+                 JOIN Commodities
+                      ON CartItems.commodity_id = Commodities.commodity_id
+        WHERE CartItems.is_checked = 1
+          AND Cart.cart_id = #{cartId};
+    </select>
+
+    <select id="getOrderVOByUserId"
+            parameterType="int"
+            resultType="com.example.entity.app.vo.OrderVO">
+        SELECT Orders.order_id,
+               Orders.total_price,
+               Orders.status,
+               Orders.create_time,
+               Orders.payment_status,
+               DeliveryAddress.name
+        FROM Orders
+                 INNER JOIN DeliveryAddress
+                            ON Orders.address_id = DeliveryAddress.id
+        WHERE Orders.user_id = #{userId}
+    </select>
+
+
+</mapper>

@@ -36,11 +36,12 @@ public class Order implements Serializable {
     private String paymentStatus;    // 支付状态
 
     @Schema(description = "配送地址")
-    private String shippingAddress;  // 配送地址
+    private Integer addressId;  // 配送地址
 
     @Schema(description = "下单时间")
     private Date createTime;         // 下单时间
 
     @Schema(description = "订单更新时间")
     private Date updateTime;         // 订单更新时间
+    
 }

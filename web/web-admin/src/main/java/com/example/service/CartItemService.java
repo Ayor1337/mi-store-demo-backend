@@ -1,14 +1,14 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.entity.dto.CartItemDTO;
+import com.example.entity.admin.dto.CartItemDTO;
+import com.example.entity.admin.vo.CartItemVO;
 import com.example.entity.pojo.CartItem;
-import com.example.entity.vo.CartItemVO;
 
 import java.util.List;
 
 public interface CartItemService extends IService<CartItem> {
-    List<CartItemVO> getCartItemVOByCartId(Integer cartId);
+    List<CartItemVO> getCartItemVOsByCartId(Integer cartId);
 
     String saveCartItem(CartItemDTO dto);
 

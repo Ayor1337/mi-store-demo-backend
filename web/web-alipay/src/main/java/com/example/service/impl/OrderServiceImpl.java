@@ -2,7 +2,6 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.entity.PayOrder;
-import com.example.entity.pojo.Commodity;
 import com.example.entity.pojo.Order;
 import com.example.entity.pojo.OrderItem;
 import com.example.entity.pojo.PaymentRecord;
@@ -12,6 +11,7 @@ import com.example.service.OrderItemService;
 import com.example.service.OrderService;
 import com.example.service.PaymentRecordService;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,15 +35,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     PaymentRecordService paymentRecordService;
 
+    @Resource(name = "stringRedisTemplate")
+    private StringRedisTemplate redisTemplate;
+
     @Override
     public PayOrder createPayOrder(Integer orderId) {
         Order order = this.getById(orderId);
+        String key = "pendingOrder:" + orderId;
+        Long remainMs = redisTemplate.getExpire(key);
+        if (remainMs <= 0) {
+            return null;
+        }
+
         List<OrderItem> orderItems = orderItemService.lambdaQuery().eq(OrderItem::getOrderId, orderId).list();
 
         PayOrder payOrder = new PayOrder();
 
-
-        payOrder.setOrderId(orderId.toString());
+        payOrder.setOrderId(order.getOrderId().toString());
 
         if (orderItems.size() == 1) {
             payOrder.setSubject(commodityService.getById(orderItems.get(0).getCommodityId()).getFullName());
@@ -56,7 +64,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         BigDecimal totalPrice = new BigDecimal("0");
         for (OrderItem orderItem : orderItems) {
-            Commodity commodity = commodityService.getById(orderItem.getCommodityId());
             totalPrice = totalPrice.add(orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity())));
         }
         payOrder.setPrice(totalPrice.toString());

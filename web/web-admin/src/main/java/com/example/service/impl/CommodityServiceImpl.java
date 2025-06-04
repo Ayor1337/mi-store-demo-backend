@@ -1,11 +1,11 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.Base64Upload;
-import com.example.entity.dto.CommodityDTO;
+import com.example.entity.admin.dto.Base64Upload;
+import com.example.entity.admin.dto.CommodityDTO;
+import com.example.entity.admin.vo.CommodityVO;
+import com.example.entity.admin.vo.CommodityWithFullNameVO;
 import com.example.entity.pojo.Commodity;
-import com.example.entity.vo.CommodityVO;
-import com.example.entity.vo.CommodityWithFullNameVO;
 import com.example.mapper.CommodityMapper;
 import com.example.minio.MinioService;
 import com.example.service.CommodityService;
@@ -47,6 +47,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         if (commodity == null) {
             return null;
         }
+        // TODO 修复空数组BUG
         BeanUtils.copyProperties(commodity, commodityVO);
         if (commodity.getImages() != null) {
             String[] array = Arrays.stream(commodity.getImages().split(",")).toArray(String[]::new);

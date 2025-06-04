@@ -1,8 +1,8 @@
 package com.example.controller;
 
-import com.example.entity.dto.CommodityDTO;
-import com.example.entity.vo.CommodityVO;
-import com.example.entity.vo.CommodityWithFullNameVO;
+import com.example.entity.admin.dto.CommodityDTO;
+import com.example.entity.admin.vo.CommodityVO;
+import com.example.entity.admin.vo.CommodityWithFullNameVO;
 import com.example.result.Result;
 import com.example.service.CommodityService;
 import io.swagger.v3.oas.annotations.Operation;

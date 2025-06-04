@@ -2,11 +2,11 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.CartItemDTO;
+import com.example.entity.admin.dto.CartItemDTO;
+import com.example.entity.admin.vo.CartItemVO;
+import com.example.entity.admin.vo.CommodityVO;
 import com.example.entity.pojo.CartItem;
 import com.example.entity.pojo.Commodity;
-import com.example.entity.vo.CartItemVO;
-import com.example.entity.vo.CommodityVO;
 import com.example.mapper.CartItemMapper;
 import com.example.service.CartItemService;
 import com.example.service.CommodityService;
@@ -24,11 +24,11 @@ import java.util.List;
 public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> implements CartItemService {
 
     @Resource
-    CommodityService commodityService;
+    private CommodityService commodityService;
 
     // 根据购物车ID获取购物车内所有项目
     @Override
-    public List<CartItemVO> getCartItemVOByCartId(Integer cartId) {
+    public List<CartItemVO> getCartItemVOsByCartId(Integer cartId) {
         List<CartItemVO> cartItemVOList = new LinkedList<>();
 
         this.lambdaQuery()
@@ -120,6 +120,7 @@ public class CartItemServiceImpl extends ServiceImpl<CartItemMapper, CartItem> i
         }
         CartItem cartItem = new CartItem();
         BeanUtils.copyProperties(dto, cartItem);
+        cartItem.setIsChecked(false);
         this.save(cartItem);
 
         return commodityService.decreaseCommodityStock(dto.getCommodityId(), quantity);

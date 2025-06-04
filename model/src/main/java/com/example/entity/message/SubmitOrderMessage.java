@@ -1,6 +1,6 @@
 package com.example.entity.message;
 
-import com.example.entity.dto.OrderDTO;
+import com.example.entity.admin.dto.OrderDTO;
 import lombok.Data;
 
 import java.util.List;

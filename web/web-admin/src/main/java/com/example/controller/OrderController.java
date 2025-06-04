@@ -1,9 +1,9 @@
 package com.example.controller;
 
-import com.example.entity.dto.OrderDTO;
-import com.example.entity.dto.OrderItemDTO;
-import com.example.entity.vo.OrderItemVO;
-import com.example.entity.vo.OrderVO;
+import com.example.entity.admin.dto.OrderDTO;
+import com.example.entity.admin.dto.OrderItemDTO;
+import com.example.entity.admin.vo.OrderItemVO;
+import com.example.entity.admin.vo.OrderVO;
 import com.example.result.Result;
 import com.example.service.OrderItemService;
 import com.example.service.OrderService;

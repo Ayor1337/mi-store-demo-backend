@@ -26,6 +26,9 @@ public class Account implements Serializable {
     @Schema(description = "用户名")
     private String username;      // 用户名
 
+    @Schema(description = "昵称")
+    private String nickname;
+
     @JsonIgnore
     @Schema(description = "密码")
     private String password;      // 密码（存储时加密，返回时可不包含）
@@ -38,6 +41,9 @@ public class Account implements Serializable {
 
     @Schema(description = "地址")
     private String address;       // 默认收货地址
+
+    @Schema(description = "头像")
+    private String avatarUrl;
 
     @Schema(description = "注册时间", example = "2021-01-01 00:00:00")
     private Date createTime;      // 注册时间

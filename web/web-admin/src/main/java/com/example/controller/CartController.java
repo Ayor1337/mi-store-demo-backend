@@ -1,16 +1,16 @@
 package com.example.controller;
 
-import com.example.entity.dto.CartItemDTO;
-import com.example.entity.dto.OrderDTO;
-import com.example.entity.vo.CartItemVO;
+import com.example.entity.admin.dto.CartItemDTO;
+import com.example.entity.admin.dto.OrderDTO;
+import com.example.entity.admin.vo.CartItemVO;
 import com.example.result.Result;
 import com.example.service.CartItemService;
 import com.example.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.List;
 @Tag(name = "购物车管理", description = "与购物车相关的操作")
 public class CartController {
 
-    @Autowired
+    @Resource
     private CartService cartService;
 
-    @Autowired
+    @Resource
     private CartItemService cartItemService;
 
     @GetMapping("/get_items/{id}")
