@@ -94,4 +94,24 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return null;
     }
 
+    @Override
+    public List<CommodityVO> getCommoditiesByKeyword(String keyword) {
+        List<Commodity> commodities = this.lambdaQuery().like(Commodity::getDescription, keyword)
+                .or()
+                .like(Commodity::getSku, keyword)
+                .list();
+
+        List<CommodityVO> voList = new ArrayList<>();
+        for (Commodity commodity : commodities) {
+            CommodityVO commodityVO = new CommodityVO();
+            BeanUtils.copyProperties(commodity, commodityVO);
+            if (commodity.getImages() != null)
+                commodityVO.setImages(commodity.getImages().split(","));
+            voList.add(commodityVO);
+        }
+
+        return voList;
+
+    }
+
 }

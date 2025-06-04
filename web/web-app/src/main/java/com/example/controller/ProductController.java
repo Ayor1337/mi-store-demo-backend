@@ -32,4 +32,9 @@ public class ProductController {
     public Result<List<CommodityVO>> getCommodity(@RequestParam("productId") Integer productId) {
         return Result.dataMessageHandler(() -> commodityService.getCommoditiesByProductId(productId), "获取商品失败");
     }
+
+    @GetMapping("/info/search")
+    public Result<List<CommodityVO>> search(@RequestParam("keyword") String keyword) {
+        return Result.dataMessageHandler(() -> commodityService.getCommoditiesByKeyword(keyword), "搜索失败");
+    }
 }

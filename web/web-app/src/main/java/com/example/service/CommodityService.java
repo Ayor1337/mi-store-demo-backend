@@ -21,4 +21,6 @@ public interface CommodityService extends IService<Commodity> {
     String decreaseCommodityStock(Integer commodityId, Integer quantity);
 
     String changeCommodityStock(Integer commodityId, Integer quantity);
+
+    List<CommodityVO> getCommoditiesByKeyword(String keyword);
 }
