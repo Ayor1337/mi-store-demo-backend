@@ -28,4 +28,12 @@ public interface ProductService extends IService<Product> {
     String deleteImg(Integer productId);
 
     String deleteImgUrl(Integer productId);
+
+    /**
+     * 根据关键词搜索商品，支持商品名称、描述及分类名称匹配
+     *
+     * @param keyword 查询关键词
+     * @return 匹配的商品列表
+     */
+    List<ProductVO> searchProducts(String keyword);
 }

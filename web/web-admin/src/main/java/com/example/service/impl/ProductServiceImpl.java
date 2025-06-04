@@ -11,6 +11,7 @@ import com.example.minio.MinioService;
 import com.example.service.CartItemService;
 import com.example.service.CommodityService;
 import com.example.service.ProductService;
+import com.example.service.CategoryService;
 import com.example.util.ImageUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Resource
     private CartItemService cartItemService;
+
+    @Resource
+    private CategoryService categoryService;
 
 
     // 获取商品列表
@@ -71,6 +75,24 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         });
 
         return voList;
+    }
+
+    // 根据关键词搜索商品，匹配名称、描述及分类名称
+    @Override
+    public List<ProductVO> searchProducts(String keyword) {
+        List<Integer> categoryIds = categoryService.searchCategoryIds(keyword);
+        List<Product> list = this.lambdaQuery()
+                .and(wrapper -> wrapper.like(Product::getName, keyword)
+                        .or()
+                        .like(Product::getDescription, keyword))
+                .or()
+                .in(!categoryIds.isEmpty(), Product::getCategoryId, categoryIds)
+                .list();
+        return list.stream().map(product -> {
+            ProductVO vo = new ProductVO();
+            BeanUtils.copyProperties(product, vo);
+            return vo;
+        }).toList();
     }
 
     // 保存商品

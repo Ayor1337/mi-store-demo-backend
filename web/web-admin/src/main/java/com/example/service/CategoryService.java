@@ -17,4 +17,12 @@ public interface CategoryService extends IService<Category> {
     CategoryVO getCategoryById(Integer categoryId);
 
     String deleteCategoryById(Integer categoryId);
+
+    /**
+     * 搜索分类名称，返回匹配的分类ID集合
+     *
+     * @param keyword 查询关键字
+     * @return 匹配分类ID列表
+     */
+    List<Integer> searchCategoryIds(String keyword);
 }
