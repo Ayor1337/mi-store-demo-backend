@@ -96,10 +96,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     @Override
     public List<CommodityVO> getCommoditiesByKeyword(String keyword) {
-        List<Commodity> commodities = this.lambdaQuery().like(Commodity::getDescription, keyword)
-                .or()
-                .like(Commodity::getSku, keyword)
-                .list();
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
+        List<Commodity> commodities = this.baseMapper.searchByKeyword(keyword);
 
         List<CommodityVO> voList = new ArrayList<>();
         for (Commodity commodity : commodities) {
@@ -113,5 +113,6 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return voList;
 
     }
+
 
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -37,7 +38,7 @@ public class Commodity {
 
     @Schema(description = "商品规格")
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<String, Object> specifications;
+    private Map<String, Object> specifications = new HashMap<>();
 
     @Schema(description = "商品图片")
     private String images;
@@ -45,13 +46,12 @@ public class Commodity {
     @Schema(description = "获取商品全称")
     public String getFullName() {
         StringBuilder sb = new StringBuilder();
-        sb.append(sku)
-                .append(" ");
-        specifications.forEach((k, v) -> {
-            sb.append(v)
-                    .append(" ");
-        });
+        sb.append(sku).append(" ");
+        if (specifications != null && !specifications.isEmpty()) {
+            specifications.forEach((k, v) ->
+                    sb.append(v).append(" ")
+            );
+        }
         return sb.toString();
-
     }
 }
