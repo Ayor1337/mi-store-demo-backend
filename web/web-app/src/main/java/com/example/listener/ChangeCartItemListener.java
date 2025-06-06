@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -31,6 +32,7 @@ public class ChangeCartItemListener {
 
     @RabbitHandler
     @SendTo
+    @Transactional(rollbackFor = Exception.class)
     public ChangeCartItemResult changeCartItem(ChangeCartItemMessage payload,
                                                Message message,
                                                Channel channel) throws IOException {
