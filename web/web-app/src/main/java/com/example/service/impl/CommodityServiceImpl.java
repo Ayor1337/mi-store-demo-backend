@@ -114,5 +114,15 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     }
 
+    @Override
+    public CommodityVO getCommodityVOById(Integer commodityId) {
+        Commodity commodity = this.getById(commodityId);
+        CommodityVO commodityVO = new CommodityVO();
+        BeanUtils.copyProperties(commodity, commodityVO);
+        if (commodity.getImages() != null)
+            commodityVO.setImages(commodity.getImages().split(","));
+        return commodityVO;
+    }
+
 
 }

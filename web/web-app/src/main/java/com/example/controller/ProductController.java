@@ -33,6 +33,11 @@ public class ProductController {
         return Result.dataMessageHandler(() -> commodityService.getCommoditiesByProductId(productId), "获取商品失败");
     }
 
+    @GetMapping("/info/get_commodity_by_id")
+    public Result<CommodityVO> getCommodityById(@RequestParam("commodityId") Integer commodityId) {
+        return Result.dataMessageHandler(() -> commodityService.getCommodityVOById(commodityId), "获取商品失败");
+    }
+
     @GetMapping("/info/search")
     public Result<List<CommodityVO>> search(@RequestParam("keyword") String keyword) {
         return Result.dataMessageHandler(() -> commodityService.getCommoditiesByKeyword(keyword), "搜索失败");
