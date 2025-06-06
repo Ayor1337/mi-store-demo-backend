@@ -16,6 +16,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,11 +45,12 @@ public class SubmitOrderListener {
     @Resource(name = "stringRedisTemplate")
     private StringRedisTemplate redisTemplate;
 
+    @Transactional(rollbackFor = Exception.class)
     @RabbitHandler
     @SendTo
-    private SubmitOrderResult submitOrder(AppSubmitOrderMessage payload,
-                                          Message message,
-                                          Channel channel) throws IOException {
+    public SubmitOrderResult submitOrder(AppSubmitOrderMessage payload,
+                                         Message message,
+                                         Channel channel) throws IOException {
 
         Integer userId = payload.getUserId();
         Integer addressId = payload.getAddressId();

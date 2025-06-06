@@ -11,6 +11,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ public class DeleteCartItemListener {
     @Resource
     private CommodityService commodityService;
 
+    @Transactional(rollbackFor = Exception.class)
     @RabbitHandler
     public DeleteCartItemResult deleteCartItem(DeleteCartItemMessage payload,
                                                Message message,

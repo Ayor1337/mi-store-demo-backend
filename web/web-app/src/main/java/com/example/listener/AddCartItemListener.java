@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -26,6 +27,7 @@ public class AddCartItemListener {
     @Resource
     private CommodityService commodityService;
 
+    @Transactional(rollbackFor = Exception.class)
     @RabbitHandler
     @SendTo
     public AddCartItemResult addCartItem(AddCartItemMessage payload,
