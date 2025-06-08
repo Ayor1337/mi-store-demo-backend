@@ -10,17 +10,17 @@ import com.example.service.CommodityService;
 import com.example.service.OrderItemService;
 import com.example.service.OrderService;
 import com.example.service.PaymentRecordService;
+import com.rabbitmq.client.GetResponse;
 import jakarta.annotation.Resource;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -37,6 +37,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Resource(name = "stringRedisTemplate")
     private StringRedisTemplate redisTemplate;
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
+    private void consumePayQueue(Integer orderId) {
+        rabbitTemplate.execute(channel -> {
+            List<GetResponse> cached = new ArrayList<>();
+            GetResponse response = channel.basicGet("pay_queue", false);
+            while (response != null) {
+                String body = new String(response.getBody(), StandardCharsets.UTF_8);
+                if (body.equals(orderId.toString())) {
+                    channel.basicAck(response.getEnvelope().getDeliveryTag(), false);
+                } else {
+                    cached.add(response);
+                }
+                response = channel.basicGet("pay_queue", false);
+            }
+            for (GetResponse other : cached) {
+                channel.basicPublish("", "pay_queue", other.getProps(), other.getBody());
+                channel.basicAck(other.getEnvelope().getDeliveryTag(), false);
+            }
+            return null;
+        });
+    }
 
     @Override
     public PayOrder createPayOrder(Integer orderId) {
@@ -93,6 +117,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             e.printStackTrace();
         }
         paymentRecordService.createPaymentRecord(paymentRecord);
+        consumePayQueue(Integer.parseInt(order_id.replaceAll("[\\[\\] ]", "")));
         return null;
 
 

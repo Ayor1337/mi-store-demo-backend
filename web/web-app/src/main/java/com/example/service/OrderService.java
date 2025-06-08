@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.entity.app.vo.OrderDetailVO;
 import com.example.entity.app.vo.OrderVO;
 import com.example.entity.app.vo.PayConfirmVO;
 import com.example.entity.pojo.Order;
@@ -18,4 +19,6 @@ public interface OrderService extends IService<Order> {
     boolean confirmOrderOwnerByUserId(Integer orderId, Integer userId);
 
     PayConfirmVO getPayConfirmVO(Integer orderId, Integer userId);
+
+    OrderDetailVO getOrderDetailVOByOrderId(Integer orderId, Integer userId);
 }

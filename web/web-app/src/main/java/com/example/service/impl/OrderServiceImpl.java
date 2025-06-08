@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.entity.app.vo.OrderDetailVO;
 import com.example.entity.app.vo.OrderVO;
 import com.example.entity.app.vo.PayConfirmVO;
 import com.example.entity.pojo.Commodity;
@@ -12,8 +13,10 @@ import com.example.mapper.OrderItemMapper;
 import com.example.mapper.OrderMapper;
 import com.example.service.CommodityService;
 import com.example.service.DeliveryAddressService;
+import com.example.service.OrderItemService;
 import com.example.service.OrderService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +37,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Resource
     private CommodityService commodityService;
+    @Autowired
+    private OrderItemService orderItemService;
 
 
     @Override
@@ -87,6 +92,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         payConfirmVO.setCommodityNames(commodityNames);
         payConfirmVO.setTotalPrice(order.getTotalPrice());
         return payConfirmVO;
+    }
+
+    @Override
+    public OrderDetailVO getOrderDetailVOByOrderId(Integer orderId, Integer userId) {
+        Order order = this.lambdaQuery()
+                .eq(Order::getOrderId, orderId)
+                .eq(Order::getUserId, userId)
+                .one();
+        DeliveryAddress deliveryAddress = deliveryAddressService.getById(order.getAddressId());
+        OrderDetailVO orderDetailVO = new OrderDetailVO();
+        orderDetailVO.setOrderId(order.getOrderId());
+        orderDetailVO.setName(deliveryAddress.getName());
+        orderDetailVO.setAddress(deliveryAddress.getAddress());
+        orderDetailVO.setPhone(getAnonymousPhone(deliveryAddress.getPhone()));
+        orderDetailVO.setOrderItems(orderItemService.getOrderItemVOByOrderId(orderId));
+        return orderDetailVO;
+
     }
 
 }

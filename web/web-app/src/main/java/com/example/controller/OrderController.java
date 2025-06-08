@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.entity.app.vo.OrderDetailVO;
 import com.example.entity.app.vo.OrderItemVO;
 import com.example.entity.app.vo.OrderVO;
 import com.example.result.Result;
@@ -36,6 +37,16 @@ public class OrderController {
         Integer userId = Integer.parseInt(request.getAttribute("id").toString());
         if (orderService.confirmOrderOwnerByUserId(orderId, userId)) {
             return Result.dataMessageHandler(() -> orderItemService.getOrderItemVOByOrderId(orderId), "获取订单详情失败");
+        }
+        return Result.fail();
+    }
+
+    @GetMapping("/get/detail")
+    public Result<OrderDetailVO> getOrderDetailVOByOrderId(HttpServletRequest request,
+                                                           @RequestParam("orderId") Integer orderId) {
+        Integer userId = Integer.parseInt(request.getAttribute("id").toString());
+        if (orderService.confirmOrderOwnerByUserId(orderId, userId)) {
+            return Result.dataMessageHandler(() -> orderService.getOrderDetailVOByOrderId(orderId, userId), "获取订单详情失败");
         }
         return Result.fail();
     }
